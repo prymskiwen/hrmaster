@@ -1,0 +1,181 @@
+@import "variables";
+@import "colors";
+@import "mixins";
+
+#users {
+    h3 {
+        font-size: 20px;
+            color: #2d2d2d;
+            line-height: 22px;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 500;
+            padding-bottom: 8px;
+    }
+
+    .ui-grid-header-cell-label {
+        color: $color__text;
+        margin-left: 2px;
+    }
+
+    .user-grid {
+        width: 100%;
+        height: 250px;
+        margin-bottom: 40px;
+        border-color: $color__employee_border;
+
+        .center {
+            text-align: center;
+        }
+
+        .fa-edit {
+            color: $color__black;
+            margin-right: 8px;
+        }
+        .fa-trash-o {
+            margin-left: 8px;
+        }
+    }
+
+    .ui-grid-filter-container {
+        padding: 0 5px 5px;
+    }
+
+    input[type="text"].ui-grid-filter-input {
+        border-color: $color__employee_border;
+        border-radius: 4px;
+        padding: 0 5px;
+    }
+
+    md-tabs[md-border-bottom] md-tabs-wrapper {
+        border: 1px solid $color__employee_border;
+        padding: 5px;
+    }
+
+    .md-padding {
+        padding: 0 0 20px 0;
+    }
+
+    .md-datepicker-input-container {
+        padding-bottom: 0;
+        border-bottom: none;
+        width: 100%;
+    }
+
+    .field-container {
+        display: flex;
+        flex-direction: row;
+        border: 1px solid $color__employee_border;
+        height: 34px;
+        border-radius: 4px;
+
+        .field {
+            width: 100%;
+        }
+
+        .icon {
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 1;
+            color: #555;
+            text-align: center;
+            background-color: #eee;
+            border: 0px solid #ccc;
+            border-left: 1px solid $color__employee_border;
+            border-radius: 0;
+
+            button {
+                margin: 0;
+                min-width: inherit;
+            }
+        }
+    }
+
+    input {
+        &.md-datepicker-input {
+            display: block;
+            width: 100%;
+            height: 32px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 0 solid $color__employee_border;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+    }
+
+    .new-emp {
+        float: right;
+        margin: -15px 0 5px;
+    }
+    .clear {
+        clear: both;
+    }
+
+    .buttons {
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    .disabled {
+        opacity: .5;
+    }
+    fieldset {
+        width: 100%;
+    }
+
+    fa {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    fieldset {
+        input,
+        select {
+            &.ng-invalid {
+                border-color: $color__red;
+            }
+        }
+    }
+    .field-container {
+        &.invalid {
+            border-color: $color__red;
+        }
+    }
+
+    md-switch {
+        margin: 0 0 0 1rem;
+
+        .md-bar {
+            background-color: $color__green;
+            opacity: .5;
+        }
+        .md-thumb {
+            background-color: $color__green;
+        }
+
+        &.md-checked {
+            .md-bar {
+                background-color: $color__red;
+                opacity: .5;
+            }
+            .md-thumb {
+                background-color: $color__red;
+            }
+        }
+    }
+
+    .ui-grid-row, .ui-grid-cell {
+        height: 35px;
+    }
+
+
+}

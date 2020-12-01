@@ -1,0 +1,124 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+
+<style>
+
+    .traindashboard-grid { margin-top: 20px; height: 600px;}
+    .search-field-wrapper { display: inline-block; width: 40%; }
+    .brown{color: #80604D;}
+    @media only screen and (max-width: 600px) {
+        html body { padding: 0; }
+        .container { padding: 0 !important; }
+        .search-field-wrapper { width: 100%; /*calc(100% - 125px);*/ }
+        #course_table th:nth-child(3),#course_table td:nth-child(3), #course_table th:nth-child(5),#course_table td:nth-child(5), #course_table th:nth-child(6),#course_table td:nth-child(6),#course_table th:nth-child(8),#course_table td:nth-child(8) { display: none;}
+        #course_table th:last-child,#course_table td:last-child { text-align: center; width: 60px;}
+        #course_table button { width: 120px; padding: 5px 4px; min-width: unset; }
+    }
+
+	table thead tr th{
+        text-align: center;
+    }
+
+</style>
+<div class="container">
+    <div class="page-title-box">
+        <h3>Training Dashboard</h3>
+    </div>
+    <div class="traindashboard-status-btn" style="margin-top:20px" ng-if="training_write">
+        <button class="btn btn-sm" ng-class="{'btn-success': showMode == 0, 'btn-default': showMode == 1 }" ng-click="showActiveData()" style="width: 150px;">Show Active Users</button>
+        <button class="btn btn-sm" ng-class="{'btn-success': showMode == 1, 'btn-default': showMode == 0 }" ng-click="showAllData()" style="width: 150px;">Show All Users</button>
+    </div>
+    <div class="traindashboard-training-own-btn" style="margin-top:10px;" ng-if="training_write">
+        <button class="btn btn-sm" ng-class="{'btn-success': ownMode == 0, 'btn-default': ownMode == 1 }" ng-click="showOwnTrainingData()" style="width: 150px;">Show Own Training</button>
+        <button class="btn btn-sm" ng-class="{'btn-success': ownMode == 1, 'btn-default': ownMode == 0 }" ng-click="showAllTrainingData()" style="width: 150px;">Show All Training</button>
+    </div>
+    <div class="traindashboard-location-btn" style="margin-top:10px;" ng-if="training_write">
+        <button class="btn btn-sm" ng-class="{'btn-success': locationMode == 0, 'btn-default': locationMode == 1 }" ng-click="showYourLocationData()" style="width: 150px;">View Your Site
+Location</button>
+        <button class="btn btn-sm" ng-class="{'btn-success': locationMode == 1, 'btn-default': locationMode == 0 }" ng-click="showAllLocationsData()" style="width: 150px;">View All Site
+Locations</button>
+    </div>
+    <div class="grid traindashboard-grid" external-scopes="clickHandler" ui-grid="gridOptionsComplex" ui-grid-edit ui-grid-resize-columns ui.grid.selection></div>
+
+	<!--start updated by Alex-cobra-2020-04-17(add view row to table) -->
+    <div style="margin-top: 30px!important;" ng-bind-html="course_result_detail">
+
+    </div>
+    <!--end updated by Alex-cobra-2020-04-17-->
+
+    <!--<div class="row" style="padding-left: 15px; padding-right: 15px;margin-top: 7px; display: none;">
+        <div class="search-field-wrapper">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                <input type="text" class="form-control" placeholder="Search..." ng-model="search">
+            </div>
+        </div>
+    </div>-->
+
+    <!--<div class="row" style="margin-left: 0px; margin-right: 0px; display: none;">
+        <table class="table table-striped" id="course_table">
+            <thead style="background-color: #0e90d2; color: white;">
+            <tr>
+                <th ng-click="sort('firstname')">Person Name
+                    <span class="fa sort-icon" ng-show="sortKey=='firstname'" ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                </th>
+                <th ng-click="sort('course_name')">Course Name
+                    <span class="fa sort-icon" ng-show="sortKey=='course_name'" ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                </th>
+                <th ng-click="sort('alloc_date')"  style="text-align: center;">Date Course Allocated
+                    <span class="fa sort-icon" ng-show="sortKey=='alloc_date'" ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                </th>
+                <th ng-click="sort('course_status')"  style="text-align: center;">Course Status
+                    <span class="fa sort-icon" ng-show="sortKey=='course_status'" ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                </th>
+                <th ng-click="sort('days_remain')"  style="text-align: center;">Days Remaining
+                    <span class="fa sort-icon" ng-show="sortKey=='days_remain'" ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                </th>
+                <th width="80px;">Action
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr dir-paginate="course in alloc_courses|orderBy:sortKey:reverse|filter:search|itemsPerPage:50">
+                <td>
+                    {{course.firstname}} {{course.lastname}}
+                </td>
+                <td>
+                    {{course.course_name}}
+                </td>
+                <td style="text-align: center;">
+                    <span ng-class="course.status_class">{{course.alloc_date}}</span>
+                </td>
+                <td style="text-align: center;">
+                    <span ng-class="course.status_class">{{course.course_status}}</span>
+                </td>
+                <td style="text-align: center;">
+                    <span ng-class="course.status_class">{{course.days_remain}}</span>
+                </td>
+
+                <td style="text-align: center;"><a class="action-button" ng-click="editAllocCourse(course)"  ng-if="training_edit"><i class="fa fa-edit fa-2x" style="color: black;"></i></a> &nbsp; <a class="action-button" ng-click="removeAllocCourse(course)"  ng-if="training_delete"><i class="fa fa-trash-o fa-2x text-danger"></i></a></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="height: 100px; text-align: center;">
+            <dir-pagination-controls
+                    max-size="40"
+                    direction-links="true"
+                    boundary-links="true" >
+            </dir-pagination-controls>
+        </div>
+    </div>-->
+</div>
+
+<div modal="showModal" close="cancel()" style="background-color: white; width: 300px; height: 200px; margin: auto;">
+    <div class="modal-header">
+        <h4>Confirm</h4>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure?</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" ng-click="remove()">Remove</button>
+        <button class="btn" ng-click="cancel()">Cancel</button>
+    </div>
+</div>

@@ -1,0 +1,214 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+<link rel="stylesheet" href="assets/css/dashboard.css" type="text/css" media="all">
+<style type="text/css">
+/*    .ui-grid-cell { display: flex; justify-content: center; align-items: center; }
+    */
+    .md-datepicker-input-container { width: 100%; border: solid 1px rgba(0,0,0,.1); margin-bottom: 5px; padding-bottom: 0; }
+    md-datepicker { width: 100%; display: flex; flex-direction: row-reverse; }
+    .md-icon-button+.md-datepicker-input-container { margin-left: 0; }
+    .body .content-row { display: flex; flex: 1; margin-bottom: 40px; }
+    .char-title { margin-bottom: 10px; font-weight: bold; }
+    .selected{color: #23527c;}
+    /*
+    .row { margin: 0; display: flex; flex-direction: row; }
+    .filter { display: flex; flex: 1; flex-direction: column; }
+    .body { display: flex; flex: 3; margin-left: 10px; flex-direction: column; height: min-content;  }
+    
+    .graph-item { display: flex; flex: 1; flex-direction: column; margin-bottom: 4rem; }
+    .pie-chart { height: 210px; }
+    .polar-chart { height: 280px; }
+    
+    .ui-grid-grid-footer { display: flex; align-items: center; padding-left: .5rem; border-top: solid .1rem #e0e0e0; background-color: #efefef; }*/
+    #FreeEmpGrid .ui-grid-cell-contents.ui-grid-header-cell-primary-focus{ text-align: center;}
+</style>
+
+<div class="container" ng-init="init()">
+    <div ng-show="!isAllowed">
+        <h1></h1>
+    </div>
+    <div ng-show="isAllowed">
+        <h2>Performance Review Reports</h2>
+        
+        <div class="row">
+            <div class="col-lg-3 filter">
+                <div class="date-filter">
+                    <md-datepicker ng-model="filter.date_from" 
+                                   md-placeholder="Select date.."
+                                   md-current-view="year" 
+                                   md-is-open="isFromOpen"
+                                   ng-change="updateReport()"
+                                   md-open-on-focus>
+                    </md-datepicker>
+                </div>
+                <div class="date-field">
+                    <md-datepicker ng-model="filter.date_to"
+                                   md-placeholder="Select date.."
+                                   md-current-view="year"
+                                   md-is-open="isToOpen"
+                                   ng-change="updateReport()"
+                                   md-open-on-focus>
+                    </md-datepicker>
+                </div>
+                <div ng-show="isDepartmentListExist">
+                    <div class="grid-departments" external-scopes="clickHandler" ui-grid="gridOptionsComplexDprt" ng-style="{height: department_length+'px'}"></div> 
+                </div>
+                <div ng-show="isLocationListExist">
+                    <div class="grid-locations" external-scopes="clickHandler" ui-grid="gridOptionsComplexLtn" ng-style="{height: location_length+'px'}"></div> 
+                </div>
+                <div ng-show="isEmployeeListExist">
+                    <div class="grid-employees" external-scopes="clickHandler" ui-grid="gridOptionsComplexEply" ng-style="{height: employees_length+'px'}"></div> 
+                </div>
+                <div ng-show="isPositionListExist">
+                    <div class="grid-positions" external-scopes="clickHandler" ui-grid="gridOptionsComplexPosition" ng-style="{height: position_length+'px'}"></div> 
+                </div>                           
+            </div>
+            <div class="col-lg-9 chart-left">
+                <!-- Injuries by location -->
+                <div class="row">
+                    <div class="graph-item col-sm-6" style="margin: 10px 0px;">
+                        <div style="text-align: right">
+                            <select ng-model="exportFormat1" ng-init="exportFormat1=''">
+                                <option label="Select Export Format" value="" disabled></option>
+                                <option value="csv">Export to CSV</option>
+                            </select>
+                            <button class="btn btn-success" type="button" ng-csv="getChartJSONDataForChart1" csv-header="getCSVHeaderForChart1" filename="Report(LocationVCourses).csv" ng-disabled="exportFormat1==''">Export & Download</button>
+                        </div>
+                        <div style="padding:10px 0;">
+                            <div class="char-title"> 
+                                Site Location v Performance Review Status<small style="font-weight: normal; ">(<a ng-click="changeShowModeForGraph1()" style="display: inline-block; color: green;">{{showMode1==0?"Show All Users":"Show Active Users Only"}}</a>)</small>
+                            </div>
+                        </div>
+                        <div class="charts">
+                            <canvas height="300" id="stackedBar1" class="chart chart-bar"
+                                chart-data="locationBarDataForPerformanceReviews" 
+                                chart-labels="locationBarLabelsForPerformanceReviews" 
+                                chart-series="locationBarSeriesForPerformanceReviews" 
+                                chart-options="locationBarOptionsForPerformanceReviews"
+                                chart-colors="locationBarColorsForPerformanceReviews">
+                            </canvas>
+                        </div>         
+                    </div>
+                    <div class="graph-item col-sm-6" style="margin: 10px 0px;">
+                        <div style="text-align: right">
+                            <select ng-model="exportFormat2" ng-init="exportFormat2=''">
+                                <option label="Select Export Format" value="" disabled></option>
+                                <option value="csv">Export to CSV</option>
+                            </select>
+                            <button class="btn btn-success" type="button" ng-csv="getChartJSONDataForChart2" csv-header="getCSVHeaderForChart2" filename="Report(LocationVEmployees).csv" ng-disabled="exportFormat2==''">Export & Download</button>
+                        </div>
+                        <div style="padding:10px 0;">
+                            <div class="char-title"> 
+                                Upcoming Performance Review (Pending) <small style="font-weight: normal; ">(<a ng-click="changeShowModeForGraph2()" style="display: inline-block; color: green;">{{showMode2==0?"Show All Users":"Show Active Users Only"}}</a>)</small>
+                            </div>
+                        </div>
+                        <div class="charts">
+                            <canvas height="300" id="bar" class="chart chart-bar" 
+                              chart-data="locationBarChartDataForPerformanceReviews" 
+                              chart-labels="locationBarChartLabelsForPerformanceReviews" 
+                              chart-series="locationBarChartSeriesForPerformanceReviews"
+                              chart-options="locationBarChartOptionsForPerformanceReviews"
+                              chart-colors="locationBarChartColorsForPerformanceReviews">
+                            </canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="graph-item col-sm-6" style="margin: 10px 0px;">
+                        <div style="text-align: right;">
+                            <select ng-model="exportFormat3" ng-init="exportFormat3=''">
+                                <option label="Select Export Format" value="" disabled></option>
+                                <option value="csv">Export to CSV</option>
+                            </select>
+                            <button class="btn btn-success" type="button" ng-csv="getChartJSONDataForChart3" csv-header="getCSVHeaderForChart3" filename="Report(ReviewVQuestion).csv" ng-disabled="exportFormat3==''">Export & Download</button>
+                        </div>
+                        <div style="padding:10px 0;">
+                            <div class="char-title" ng-hide="selected_employee==''"> 
+                                {{selected_employee}}'s Performance Review V Questions
+                            </div>
+                            <div class="char-title" ng-hide="selected_employee!=''"> 
+                                Performance Review V Questions
+                            </div>
+                        </div>
+                        <div class="charts" style="overflow-x: scroll">
+                            <div style="width: 800px;" ng-hide="selected_employee==''">
+                                <canvas height="400" id="stackedBar" class="chart chart-bar"
+                                    chart-data="BarDataForEmployeePerformanceReviews" 
+                                    chart-labels="BarLabelsForEmployeePerformanceReviews" 
+                                    chart-series="BarSeriesForEmployeePerformanceReviews" 
+                                    chart-options="BarOptionsForEmployeePerformanceReviews"
+                                    chart-colors="BarColorsForEmployeePerformanceReviews">
+                                </canvas>
+                            </div>
+                            <div ng-hide="selected_employee!=''" style="height: 400px; text-align: center;padding-top: 180px"><h1>Select Employee</h1></div>
+                        </div>         
+                    </div>
+                    <div class="graph-item col-sm-6" style="margin: 10px 0px;">
+                        <div style="text-align: right;">
+                            <select ng-model="exportFormat4" ng-init="exportFormat4=''">
+                                <option label="Select Export Format" value="" disabled></option>
+                                <option value="csv">Export to CSV</option>
+                            </select>
+                            <button class="btn btn-success" type="button" ng-csv="getChartJSONDataForChart4" csv-header="getCSVHeaderForChart4" filename="Report(ReviewVScore).csv" ng-disabled="exportFormat4==''">Export & Download</button>
+                        </div>
+                        <div style="padding:10px 0;">
+                            <div class="char-title"> 
+                                Performance Review V Score<small style="font-weight: normal; ">(<a ng-click="changeShowModeForGraph4()" style="display: inline-block; color: green;">{{showMode4==0?"Show All Users":"Show Active Users Only"}}</a>)</small>
+                            </div>
+                        </div>
+                        <div class="charts" style="overflow-x: scroll">
+                            <div class="container-4" style="width: 400px; margin: auto;">
+                                <canvas height="400" id="stackedBar" class="chart chart-bar"
+                                    chart-data="BarDataForEmployeePerformanceScore" 
+                                    chart-labels="BarLabelsForEmployeePerformanceScore" 
+                                    chart-series="BarSeriesForEmployeePerformanceScore" 
+                                    chart-options="BarOptionsForEmployeePerformanceScore"
+                                    chart-colors="BarColorsForEmployeePerformanceScore">
+                                </canvas>
+                            </div>
+                        </div>         
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="graph-item col-sm-6" style="margin: 10px 0px">
+                        <div style="text-align: right">
+                            <select ng-model="exportFormat6" ng-init="exportFormat6=''">
+                                <option label="Select Export Format" value="" disabled></option>
+                                <option value="csv">Export to CSV</option>
+                            </select>
+                            <button class="btn btn-success" type="button" ng-csv="getChartJSONDataForChart6" csv-header="getCSVHeaderForChart6" filename="Report(OnTimeReviews).csv" ng-disabled="exportFormat6==''">Export & Download</button>
+                        </div>
+                        <div style="padding:10px 0;">
+                            <div class="char-title"> 
+                                Reviews Completed on Time <small style="font-weight: normal; ">(<a ng-click="changeShowModeForGraph6()" style="display: inline-block; color: green;">{{showMode6==0?"Show All Users":"Show Active Users Only"}}</a>)</small>
+                            </div>
+                        </div>
+                        <div class="charts">
+                            <canvas height="300" id="polar-area" class="chart chart-pie"
+                              chart-data="PieDataForReviews" 
+                              chart-labels="PieLabelsForReviews" 
+                              chart-options="PieOptionsForReviews">
+                            </canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" style="margin: 10px 0px;">
+                        <div style="text-align: right;">
+                            <select ng-model="exportFormat7" ng-init="exportFormat7=''">
+                                <option label="Select Export Format" value="" disabled></option>
+                                <option value="csv">Export to CSV</option>
+                            </select>
+                            <button class="btn btn-success" type="button" ng-csv="getJSONDataForGrid" csv-header="getCSVHeaderForGrid" filename="Report(NoReviewEmployees).csv" ng-disabled="exportFormat7==''">Export & Download</button>
+                        </div>
+                        <div style="padding:10px 0;">
+                            <div class="char-title"> 
+                                Employees with unassigned performance review
+                            </div>
+                        </div>
+                        <div external-scopes="clickHandler" ui-grid="gridOptionsComplexFreeEply" style="height: 400px; width: 100%;" id="FreeEmpGrid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+</div>

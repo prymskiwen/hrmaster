@@ -1,0 +1,25 @@
+@import "variables";
+@import "colors";
+@import "mixins";
+
+h3 {
+    font-size: 2rem;
+    color: $color__text;
+    line-height: 2.2rem;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: $global__font-weight--semibold;
+    padding-bottom: .8rem;
+}
+
+.center {
+    text-align: center;
+}
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+.expired {
+    color: $color__expired;
+}
+.pending {
+    color: $color__green;
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="myApp" style="height: auto; ">
+
+  <head>
+    <script data-require="angular.js@*" data-semver="1.5.0" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+    <script src="https://code.angularjs.org/1.5.0/angular-animate.min.js"></script>
+    <script src="https://code.angularjs.org/1.5.0/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="slider.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="jk-carousel.min.js"></script>
+    <script src="script.js"></script>
+  </head>
+
+  <body ng-controller="MyCtrl" style="height: auto; padding: 17px; ">
+    <md-card layout="column" layout-align="center center" style="margin-bottom: 0;">
+      <jk-carousel
+        data="dataArray"
+        item-template-url="'item-template.html'"
+        max-width="800"
+        max-height="500"
+        auto-slide="true"
+        auto-slide-time="3000" >
+        </jk-carousel>
+    </md-card>
+  </body>
+
+</html>

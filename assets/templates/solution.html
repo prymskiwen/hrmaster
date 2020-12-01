@@ -1,0 +1,72 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+<style type="text/css">
+.container {
+	display: flex;
+	flex-direction: column;
+}
+.content-item {
+	display: flex;
+	flex-direction: row;
+	min-height: 150px;
+	margin-bottom: 30px;
+}
+.content-item .image{
+    margin: 20px;
+}
+@media (max-width: 767px) {
+    .content-item{
+        flex-direction: column;
+    }
+}
+.image {
+	display: flex;
+	flex-direction: column;
+	align-self: center;
+	width: 270px;
+}
+img {
+	box-shadow: 1px 1px 2px 2px;
+	border-radius: 2px;
+	width: 270px;
+}
+</style>
+
+<div class="container">
+  <h2>Solutions</h2>
+  <div class="content-item">
+    <div class="description">
+      <h3 id="work-health-and-safety">Work Health &amp; Safety</h3>
+      <p>Using OPTRON technology, HR Master assists colleagues in  managing their work health and safety obligations by giving HR professionals a wide range of tools and reports that cover key areas of compliance. </p>
+      <p>HRM's asset and hazardous substance registers, allow colleagues to create secondary users with appropriate permissions, to create, track, update and set reminders for plant and equipment, personal protective equipment and hazardous substances within their workplace. </p>
+      <p>Based on HAZPAK standards, HRM's injury register gives colleagues the tools to not only record  incidents and near misses, but generate an array of reports, metrical data and set key email and dashboard reminders to remind them of upcoming dates and events.</p>
+    </div>
+    <div class="image"> <img src="assets/images/whsImage.jpg" border="0" alt="Work health & safety"> </div>
+  </div>
+  <div class="content-item">
+    <div class="description">
+      <h3 id="recruiment-and-training">Training &amp; Development</h3>
+      <p> While small and medium businesses often have comprehensive one-on-one and paper based training systems in place, larger businesses are often required to utilise expensive on-line learning management systems to facilitate their training obligations under the legislation. </p>
+      <p>As a fully integrated HR Platform, HR Master not only has an inbuilt learning management system that enables colleagues  to create courses, but also utilise global courses created by HRM staff and made available to all subscribers. </p>
+      <p>Colleagues creating their own courses, can upload documents, videos and images for training material, as well as create their own questions and answers. Once colleagues allocate those courses to their staff, they will receive correspondence advising them of their course login, making course allocation as simple as a click of a button. Colleagues can manage their employees record keeping and training obligations by utilising HRM's dashboard and reminder systems making HRM, a holistic HR package. </p>
+    </div>
+    <div class="image"> <img src="assets/images/trainingDevelopment.jpg" border="0" alt="Training and development"> </div>
+  </div>
+  <div class="content-item">
+    <div class="description">
+      <h3 id="industrial-relations">Industrial Relations</h3>
+      <p>We live in a world of compliance. Work health and safety, industrial relations, and consumer laws alone,  place significant and onerous obligations on colleagues to  provide effective training and development.</p>
+      <p>Having decades of experience in Courts and Industrial Relations Tribunals/Commissions (both State and Federal), our award winning team have designed HRM, with  employee registers that give colleagues both the tools to record employee and other interactions with privacy and confidentiality at the very core of the system. </p>
+      <p>In addition to allowing colleagues to record licenses and employee information, OPTRON technology facilitates HR diaries, flag alert and confidentiality flags to give you peace of mind when making file notes. </p>
+      <p>Only colleagues you authorise will be able to access and/or edit your employee employee file notes and alerts, giving you   the ability to track time spent per department and generate important metrical data. By Utilising HRM's confidentiality flag, uploading documents and tagging other employees into various notes, key information can be recalled by authorised users at a touch of a button.</p>
+    </div>
+    <div class="image"> <img src="assets/images/industrialRelations.jpg" border="0" alt="Industrial Relations"> </div>
+  </div>
+  <div class="content-item">
+    <div class="description">
+      <h3 id="key-hr-metrical-data-and-reports">Key HR Metrical Data &amp; Reports</h3>
+      <p>HR Masters reporting and analytical systems gives businesses key metrical data on  critical areas in the system and provides colleagues the  reports needed to quickly identify trends and breakdown employee costing across a wide range of areas.</p>
+      <p>With performance review and training data at your fingertips, isolating training needs, as well as conducting your performance reviews, has never been easier.</p>
+    </div>
+    <div class="image"> <img src="assets/images/datareporting.jpg" border="0" alt="Key HR Metrical Data & Reports"> </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+/******* Color names *********/
+/*****************************/
+h3 {
+  font-size: 2rem;
+  color: #2d2d2d;
+  line-height: 2.2rem;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+  padding-bottom: .8rem; }
+
+.center {
+  text-align: center; }
+
+.text-right {
+  text-align: right; }
+
+.text-left {
+  text-align: left; }
+
+.expired {
+  color: #cb132d; }
+
+.pending {
+  color: #228B22; }

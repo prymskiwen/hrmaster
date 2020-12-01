@@ -1,0 +1,37 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+<link rel="stylesheet" href="assets/css/daypilot.css" type="text/css" media="all">
+<style>
+    .scheduler_default_corner >div:nth-child(4){display: none;} /* hide demo text*/
+    .space{margin: 0px 0px 10px 0px;}
+    .ListItems, ListItems:hover {color: darkgray;margin-top: 2.5px !important;}
+    a, a:hover {text-decoration: none;display: block;padding: 20px,80px;margin: 0px;}
+}
+</style>
+<div class="container" id="users" ng-init="init()">
+    <h3>{{pageTitle}}</h3>
+    <div class="row">
+        <div class="col-md-3">
+            <div ng-show="isEmployeeListExist">
+                <div class="grid-employees" external-scopes="clickHandler" ui-grid="gridOptionsComplexEply" ng-style="{height: employees_length+'px'}"></div> 
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="space">
+                Cell duration:
+                <select ng-model="scheduler.cellDuration">
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="60">60 minutes</option>
+                </select>
+        
+                Show non-business hours:
+                <select ng-model="scheduler.showNonBusiness" ng-options="(item?'show':'hide') for item in [true, false]"></select>
+        
+            </div>
+            <daypilot-scheduler id="dp" config="scheduler" events="events"></daypilot-scheduler>
+        </div>
+        <div class="col-md-2">
+            <daypilot-navigator id="navigator" config="navigatorConfig"></daypilot-navigator>
+        </div>
+    </div>
+</div>

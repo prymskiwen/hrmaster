@@ -1,0 +1,44 @@
+/******* Color names *********/
+/*****************************/
+/*** Input elements **/
+input, select {
+  display: block;
+  height: 3.6rem;
+  box-sizing: border-box;
+  box-shadow: none;
+  max-width: none;
+  padding: 0 1.3rem;
+  background-color: #FFFFFF;
+  color: #2d2d2d;
+  border: 0.1rem solid #CCCCCC;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: 1.4rem;
+  line-height: 3.6rem;
+  border-radius: .3rem; }
+
+button {
+  width: 11rem;
+  height: 3.6rem;
+  border-radius: .5rem;
+  /*
+    &.main {
+        background-color: $color__palette-royal-blue;
+        border: .1rem solid $color__palette-comet-blue;
+
+        &:hover {
+            background-color: $color__palette-royal-blue-op;
+        }
+    }
+
+    &.second {
+        background-color: $color__palette-comet-blue;
+        border: .1rem solid $color__palette-comet-blue;
+        color: $color__white;
+    }
+    &.third {
+        background-color: $color__palette-pale-blue;
+        border: .1rem solid $color__palette-pale-blue;
+        color: $color__black-russian;
+    }
+    */ }

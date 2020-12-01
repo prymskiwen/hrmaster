@@ -1,0 +1,221 @@
+/*
+    Document   : custom
+    Created on : Dec 28, 2016, 10:30:21 PM
+    Author     : WebHub Nepal Pvt. Ltd.
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root {
+    display: block;
+}
+
+#header{
+    margin-top: 10px;
+}
+.slider-holder {
+    background: #ffffff none repeat scroll 0 0;
+    box-shadow: 0 0 6px -1px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    float: right;
+    height: auto;
+    margin-top: 20px;
+    max-width: 497px;
+    padding: 20px;
+    width: 57%;
+    z-index: 1000;
+}
+.slider-holder .flexslider{
+    width: unset;
+}
+
+.main_title {
+    color: #fff;
+    font-size: 65px;
+    font-weight: bold;
+}
+.main_title:focus, .main_title:hover {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+}
+.main_subtitle {
+    font-size: 23px !important;
+    margin-top: -15px;
+}
+#footer, #footer-push{
+    height: auto !important;
+}
+#wrapper{
+    margin: unset !important;
+}
+.footer-shell,.footer-cols{
+    background: #31A1CA;
+}
+.page-shell{
+    padding: 15px;
+}
+.footer-bottom{
+    text-align: center;
+    height: auto;
+      width: 100%;
+}
+.footer_col_content{
+        display: none !important;
+    }
+@media(min-width: 120px) and (max-width: 991px){
+    .footer_col{
+        width: 100% !important;
+    }
+    .footer_col_content{
+        display: none !important;
+    }
+
+}
+@media(min-width: 768px) and (max-width: 991px){
+    .main_title{
+        font-size: 45px;
+    }
+    .header-cnt a.blue-btn{
+        bottom: -25px;
+    }
+}
+@media(min-width: 768px){
+    .slider-holder{
+        position: relative !important;
+    }
+}
+@media(max-width: 767px){
+    .tablemargin{
+         padding-right: 100px !important;
+         padding-left: 60px !important;
+         overflow-x:auto important;
+    }
+    .top-nav{
+        margin: 0px;
+    }
+    .flexslider{
+        height: 125px !important;
+    }
+    .slider-holder {
+        height: auto;
+        left: 57%;
+    }
+    .main_title{
+        font-size: 35px;
+    }
+    .header-cnt{
+        padding-top: 10px;
+    }
+    .main_subtitle{
+        margin: 0px;
+    }
+    .login-form-wrapper{
+        margin: 0px auto;
+        width: 90%;
+    }
+    .main {
+        padding-top: 50px !important;
+    }
+    .main .testimonial{
+        margin-top: 225px;
+    }
+    .slider-holder{
+        position: static;
+    /* top: 230px !important; */
+    /* left: 20% !important; */
+    width: 100% !important;
+    margin: 0px auto;
+    display: inline-block;
+    }
+}
+
+
+@media(max-width: 480px){
+.footer-nav ul li {
+    float: left;
+    margin: 25px -4px 5px 0px;
+    background-image:none !important;
+    font-size: 17px !important;
+    display:block;
+    width: 100%;
+}
+    .login-form-wrapper fieldset{
+        width: 100%;
+    }
+    .login-form-wrapper input{
+        width: 100%;
+    }
+    .slider-holder{
+        width: 100% !important;
+        left: 10% !important;
+    }
+    .slides > li{
+        width: 400px !important;
+    }
+.main {
+    padding-top: 50px !important;
+    padding-bottom: 290px  !important;
+     /*padding-bottom: 193px  !important;*/
+}
+}
+
+.shell{
+   max-width: 989px !important;
+   /* text-align: center;*/
+    width: 100%;
+    /*text-align: center;*/
+}
+
+.footer-nav {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    float: none;
+}
+
+.footer-nav .separator {
+    width: .1rem;
+    background-color: #FFF;
+    margin: 0 15px;
+    height: 10px;
+}
+.footer-nav a {
+    color: #FFF;
+    font-size: 12px;
+}
+
+
+
+html,
+body {
+  margin:0 !important;
+  padding:0 !important;
+  height:100% !important;
+}
+#wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.container {
+  padding: 10px;
+  /*padding-bottom:114px; */
+  padding-bottom: 50px;   /* Height of the footer */
+}
+
+
+footer {
+    bottom: 0;
+    width: 100%;
+    height: 112px;   /* Height of the footer */
+    background:#6cf;
+    margin-top: auto;
+}

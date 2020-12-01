@@ -1,0 +1,327 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+<link rel="stylesheet" href="assets/css/angular-bootstrap-calendar.min.css">
+<style>
+    .ListItems, ListItems:hover {color: darkgray;margin-top: 2.5px !important;}
+    .selected{color: #23527c;}
+    button{min-width: auto;}
+    md-select{margin: auto;}
+    td{text-align: center;}
+    @media (max-width: 1000px){
+        .event_table{
+            overflow-x: auto;
+            min-height: 0.01%; 
+        }
+    }
+    .md-select-menu-container{
+        z-index: 9000;
+    }
+    .hide{
+        display:none;
+    }
+}
+</style>
+<div class="container" id="users" ng-init="init()">
+    <h3>{{pageTitle}}</h3>
+    <h2 class="text-center">{{calendarTitle}}</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <div class="btn-group">
+                        <button
+                            class="btn btn-primary"
+                            mwl-date-modifier
+                            date="viewDate"
+                            decrement="calendarView">
+                            Previous
+                        </button>
+                        <button
+                            class="btn btn-default"
+                            mwl-date-modifier
+                            date="viewDate"
+                            set-to-today>
+                            Today
+                        </button>
+                        <button
+                            class="btn btn-primary"
+                            mwl-date-modifier
+                            date="viewDate"
+                            increment="calendarView">
+                            Next
+                        </button>
+                    </div>
+                </div>
+                <br class="visible-xs visible-sm">
+                <div class="col-md-6 text-center">
+                    <div class="btn-group">
+                        <label class="btn btn-primary" ng-model="calendarView" uib-btn-radio="'year'">Year</label>
+                        <label class="btn btn-primary" ng-model="calendarView" uib-btn-radio="'month'">Month</label>
+                        <label class="btn btn-primary" ng-model="calendarView" uib-btn-radio="'week'">Week</label>
+                        <label class="btn btn-primary" ng-model="calendarView" uib-btn-radio="'day'">Day</label>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <mwl-calendar
+                        events="alloc_events"
+                        view="calendarView"
+                        view-title="calendarTitle"
+                        view-date="viewDate"
+                        on-event-click="eventClicked(calendarEvent)"
+                        on-event-times-changed="eventTimesChanged(calendarEvent); calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
+                        edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'"
+                        delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
+                        on-edit-event-click="eventEdited(calendarEvent)"
+                        on-delete-event-click="eventDeleted(calendarEvent)"
+                        cell-is-open="isCellOpen"
+                        day-view-start="06:00"
+                        day-view-end="22:00"
+                        day-view-split="30"
+                        day-view-event-width="dayViewEventWidth"
+                        cell-modifier="modifyCell(calendarCell)">
+                    </mwl-calendar>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px">
+                <div class="col-md-4 pull-right">
+                    <label>Search for Employee's schedule: </label>
+                    <md-select ng-model="selected_emp" multiple placeholder="Select Employees" style="max-width: auto;" ng-change="filterAttendeesChange()" >
+                        <md-option ng-value="emp.id" ng-repeat="emp in employees">{{emp.employee}}</md-option>
+                    </md-select>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" ng-class="{'btn-success': showMode == 0, 'btn-default': showMode == 1 }" ng-click="showDataByMode()" style="width: 150px;display: block; margin-bottom: 4px;">Active Users Only</button>
+                    <button class="btn btn-sm" ng-class="{'btn-success': showMode == 1, 'btn-default': showMode == 0 }" ng-click="showDataByMode()" style="width: 150px;display: block">All Users</button>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 id="event-editor">
+                        Edit events
+                        <button
+                            class="btn btn-primary pull-right"
+                            ng-click="addEventTemplate()">
+                            Add new
+                        </button>
+                        <div class="clearfix"></div>
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 event_table">
+                    <table class="table table-bordered" ng-show="eventscheduler_write">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Title</th>
+                                <th style="text-align: center;">Max Number</th>
+                                <th style="text-align: center;">Employee</th>
+                                <th style="text-align: center;">Commencement</th>
+                                <th style="text-align: center;">Finishes</th>
+                                <th style="text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="one in alloc_events track by $index">
+                                <td>
+                                    <input type="hidden" ng-model="one.id">
+                                    <md-select ng-model="one.event_id" placeholder="Select Event">
+                                        <md-option ng-value="event.id" ng-repeat="event in events">{{event.event_name}}</md-option>
+                                    </md-select>
+                                </td>
+                                <td>
+                                    <input style="width: 60px"
+                                        type="text"
+                                        class="form-control"
+                                        ng-model="one.class_limit">
+                                </td>
+                                <td>
+                                    <md-select ng-model="one.user_id" multiple placeholder="Select Employees" style="width: 300px;">
+                                        <md-option ng-value="emp.id" ng-repeat="emp in employees">{{emp.employee}}</md-option>
+                                    </md-select>
+                                </td>
+                                <td>
+                                    <p class="input-group" style="min-width: 150px">
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            readonly
+                                            uib-datepicker-popup="dd-MM-yyyy"
+                                            ng-model="one.startsAt_date"
+                                            is-open="one.startOpen"
+                                            close-text="Close" >
+                                        <span class="input-group-btn">
+                                            <button
+                                                type="button"
+                                                class="btn btn-default"
+                                                ng-click="toggle($event, 'startOpen', one)">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                    <uib-timepicker
+                                        ng-model="one.startsAt_time"
+                                        hour-step="1"
+                                        minute-step="15"
+                                        show-meridian="true">
+                                    </uib-timepicker>
+                                </td>
+                                <td>
+                                    <p class="input-group" style="min-width: 150px">
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            readonly
+                                            uib-datepicker-popup="dd-MM-yyyy"
+                                            ng-model="one.endsAt_date"
+                                            is-open="one.endOpen"
+                                            close-text="Close">
+                                        <span class="input-group-btn">
+                                            <button
+                                                type="button"
+                                                class="btn btn-default"
+                                                ng-click="toggle($event, 'endOpen', one)">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                    <uib-timepicker
+                                        ng-model="one.endsAt_time"
+                                        hour-step="1"
+                                        minute-step="15"
+                                        show-meridian="true">
+                                    </uib-timepicker>
+                                </td>
+                                <td>
+                                    <button ng-show="eventscheduler_write" 
+                                        class="btn btn-success"
+                                        ng-click="saveAllocEvent($index)"
+                                        style="margin: 4px auto;display: block">
+                                        <i class="fa fa-save" style="font-size: 24px;"></i>
+                                        <md-tooltip md-direction="top">Save or Edit an Event</md-tooltip>
+                                    </button> 
+                                    <button ng-show="eventscheduler_write || eventscheduler_delete"
+                                        class="btn btn-danger"
+                                        ng-click="removeAllocEvent($index)"
+                                        style="margin: 4px auto; display: block;">
+                                        <i class="fa fa-trash-o" style="font-size: 24px"></i>
+                                        <md-tooltip md-direction="top">Remove an Event</md-tooltip>
+                                    </button>
+                                    <button ng-show="eventscheduler_write"
+                                        class="btn btn-warning"
+                                        ng-click="emailAllocEvent($index)"
+                                        style="margin: 4px auto; display: block;">
+                                        <i class="fa fa-envelope-square" style="font-size: 24px"></i>
+                                        <md-tooltip md-direction="top">Email the Event details to an Attendee</md-tooltip>
+                                    </button>
+                                </td>
+                             </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div modal="detailModal" close="cancel()" style="background-color: white; width: 500px; height: 450px; margin: auto;">
+        <div class="modal-header">
+            <h4>View Event</h4>
+        </div>
+        <div class="modal-body" style="margin: 5px 20px">
+            <div class="row">
+                <label class="col-md-4">Event: </label>
+                <p class="col-md-8" type="text">{{selected_event.event_name}}</p>
+            </div>
+            <div class="row">
+                <label class="col-md-4">Event Description: </label>
+                <p class="col-md-8" type="text">{{selected_event.event_desc}}</p>
+            </div>
+            <div class="row">
+                <label class="col-md-4">Employees: </label>
+                <ul class="col-md-8" type="text" style="margin-left: 0px">
+                    <li ng-repeat="name in selected_event.names">{{name}}</li>
+                </ul>
+            </div>
+            <div class="row">
+                <label class="col-md-4">Start At: </label>
+                <p class="col-md-8" type="text">{{selected_event.startsAt}}</p>
+            </div>
+            <div class="row">
+                <label class="col-md-4">End At: </label>
+                <p class="col-md-8" type="text">{{selected_event.endsAt}}</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" ng-click="cancel()">Close</button>
+        </div>
+    </div>
+    <div modal="saveModal" close="cancel()" style="background-color: white; width: 500px; height: 280px; margin: auto;">
+        <div class="modal-header">
+            <h4>Save Confirmation</h4>
+        </div>
+        <div class="modal-body" style="margin: 5px 20px">
+            <div class="row">
+                <p class="col-md-12" type="text">By selecting save, the course details will be updated. Please remember to inform any attendees who are already listed to attend this event, of the updated changes. Do you wish to continue?</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="save()">Save</button>
+            <button class="btn btn-danger" ng-click="cancelSave()">Close</button>
+        </div>
+    </div>
+    <div modal="removeModal" close="cancel()" style="background-color: white; width: 500px; height: 300px; margin: auto;">
+        <div class="modal-header">
+            <h4>Remove Schedule</h4>
+        </div>
+        <div class="modal-body" style="margin: 5px 20px">
+            <div class="row">
+                <p class="col-md-12" type="text">Are you sure you wish to delete this event? If so, it will be removed from the system and any employee who is scheduled to attend a future event, will need to be notified</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" ng-click="remove()">Remove</button>
+            <button class="btn btn-default" ng-click="cancelRemove()">Close</button>
+        </div>
+    </div>
+    <div modal="limitModal" close="cancel()" style="background-color: white; width: 500px; height: 300px; margin: auto;">
+        <div class="modal-header">
+            <h4>Attendee Maximum Limit Reached</h4>
+        </div>
+        <div class="modal-body" style="margin: 5px 20px">
+            <div class="row">
+                <p class="col-md-12" type="text">Warning. The event has reached its maximum attendee capacity and you are unable to add any further attendees. Should you require more attendees, please edit the maximum attendees limit value first, in the text field called "Max Number".</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" ng-click="agreeLimit()">Agree</button>
+        </div>
+    </div>
+    <div modal="emailModal" close="cancel()" style="background-color: white; width: 550px; height: 400px; margin: auto;">
+        <div class="modal-header">
+            <h4>Send email</h4>
+        </div>
+        <div class="modal-body" style="margin: 5px 20px">
+            <div class="row">
+                <p class="col-md-12">Select attendants to send emails.</p><br>
+                <p class="col-md-12">NOTE: in order to edit the attendees and event list, please ensure these changes are made and saved prior to using this email function.</p>
+                <md-input-container flex>
+                    <md-select ng-model="sel_emps" multiple placeholder="Select Employees" style="width: 300px;" md-on-open="dirtyFix()" ng-change="filterEmailAttendeesChange()" >
+                        <md-option ng-value="emp.id" ng-repeat="emp in cur_emps">{{emp.employee}}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="send_email()">Send Email</button>
+            <button class="btn btn-default" ng-click="cancelEmail()">Close</button>
+        </div>
+        <div class="alertMessage hide">
+            <div class="alert alert-success alert-dismissable">
+                <i class="fa fa-ban"></i>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="showMessage = 0;">&times;</button>
+                Congratulations, the selected attendees have just been emailed the event details.
+            </div>
+        </div>
+    </div>
+</div>

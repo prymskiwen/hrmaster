@@ -1,0 +1,155 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+
+<style type="text/css">
+    h3 { font-size: 2rem; color: #2d2d2d; line-height: 2.2rem; font-family: 'Ubuntu', sans-serif; font-weight: 500; padding-bottom: .8rem; }
+    
+    
+    .form-new { display: flex; justify-content: flex-end; margin-bottom: 5px;}
+    .ui-grid-grid-footer { display: flex; align-items: center; padding-left: .5rem; border-top: solid .1rem #e0e0e0; background-color: #efefef; }
+    .grid-center-cell { display: flex; justify-content: center; }
+    
+    .option-separator { display: inline-block; margin: 0 1rem; }
+    .text-edit { color: #e6a400; }
+    .text-edit:hover { opacity: .7;}
+    .text-view { color: #2e6da9; }
+    .text-view:hover { opacity: .7;}
+    .text-print { color: #000;}
+    .text-print:hover { opacity: .7;}
+    .text-duplicate { color: #228b22; }
+    .text-duplicate:hover { opacity: .7;}
+    .text-delete { color: #ec1c24; }
+    .text-delete:hover { opacity: .7;}
+    
+    .actions { margin-top: 3rem; display: flex; justify-content: flex-end;} 
+    
+    #checklist-view { margin-bottom: 1rem; min-height: 8rem; border: solid 1px rgba(212,212,212,1); }
+    #checklist-view .checklist-header {display: flex; flex-direction: row; padding: 10px 0;  justify-content: center; font-size: 18px; color: #fff; background-color: #b3dce6; text-transform: uppercase; }
+    #checklist-view .checklist-header .checklist-name { display: flex; flex-direction: row; margin-left: 5px; flex: 1; align-items: center;}
+    .new-checklist-group { display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; color: #fff; text-transform: none; font-size: 13px;}
+    .new-checklist-group span.glyphicon { margin: -3px 3px 0 0; } 
+    
+    .checklist-name .action-set { margin-left: 15px; }
+    .action-set.detail-row { display: flex; justify-content: flex-end; align-items: center;}
+
+    .checklist-row { display: flex; flex-direction: row; align-items: center; padding: .3px 0; border-bottom: solid 1px rgba(212,212,212,.5);}
+    .checklist-row.header { border-bottom: none!important; margin-bottom: -10px; font-weight: 700; background-color: rgba(179, 220, 230, .5); height: 35px;}
+    .checklist-row div:first-child { flex: 5; padding-left: 5px;}
+    .checklist-row div:nth-child(2),.checklist-row div:nth-child(3) {display: flex; justify-content: center; width: 35px;} 
+    .checklist-row div:nth-child(4) { flex: 5; }
+    .checklist-row div:nth-child(5) { flex: 3; }
+    .checklist-row div:nth-child(6) { flex: 2; }
+    
+    .checklist-row.section-header { display: flex; flex-direction: row; align-items: center;  border-top: solid 1px rgba(0,0,0,.1); border-bottom: solid 1px rgba(0,0,0,.1); background-color: #f3f3f3; padding: 5px; margin: 10px 0 0; font-weight: 700; }
+    .checklist-row.section-header div.action-set { flex: none; width: fit-content; align-items: center; }
+    
+    .loading-wrapper { display: flex; justify-content: center; align-items: center; margin-top: 4rem; font-size: 18px; }
+    .print-message { text-align: center; margin: 20px 0 10px; } 
+</style>
+
+<div class="container" id="auditadmin-div">
+    <h3 ng-show="pageError != 1">{{ pageheader }}</h3> 
+    <br />
+    <div class="form-new">
+        <button type="button" class="btn btn-success" ng-click="newChecklist();" >New Checklist</button>
+    </div>
+    <div class="grid auditadmin-grid" external-scopes="clickHandler" ui-grid="gridOptionsComplex" ui-grid-edit ui-grid-resize-columns ui.grid.selection></div>
+
+    <div id="checklist-hover" ng-hide="true">
+        To view one of the checklists, click the "View" or "Print" link.  This enables you to determine the checklist you want to use. Printing 
+        out the checklist also allows you to use a paper copy to conduct the audit of your workplace.
+    </div>
+    
+    <div id="action-hover" ng-hide="true">
+        <p>Click "Edit" to modify a checklist.  When editing, you can rename the checklist, groups and items, reorder groups and items, add/remove groups and add/remove items. </p>
+        <p>Click "Duplicate" to make a copy of a checklist, rename it as needed and use the duplicated checklist for your purposes. </p> 
+        <p>Click "Delete" to delete an unwanted checklist.</p>
+        <p>Once you have created a checklist and conducted the audit, go to the Audit Activity Manager (under the Autosafe --> Autosafe Audits menu), click "New Audit",
+        select the appropriate checklist and then enter the results of the audit.</p>
+    </div>
+    
+    <div id="flag-hover" ng-hide="true">
+        <p>Check any of the checkboxes here to flag the checklist to be included in a bulk print. Then click the "Bulk Print" button.</p>
+        <p>Printing 1 checklist at a time can be a time consuming process so select the checklists here to print them all at once.</p> 
+    </div>  
+    
+    <div class="print-message" ng-hide="showPrintChecklistMessage == 0" ng-bind-html="printChecklistUrl"></div>
+
+    <div class="loading-wrapper" ng-hide="showPrintChecklistMessage != 2">
+        <div class="loading"></div>
+        Creating printable checklist - please wait..
+    </div>      
+    
+    <div class="loading-wrapper" ng-hide="showchecklistLoading == 0">
+        <div class="loading"></div>
+        Loading checklist - please wait..
+    </div>  
+    
+    <div class="actions" ng-show="showchecklist == 1" >
+        <div class="printAction text-print" ng-click="printChecklist();">
+            <span class="glyphicon glyphicon-print"></span>
+            Print
+        </div>
+        <div class="action-divider" style="margin: 0 10px;">:</div>
+        <div class="close-checklist text-print" ng-click="showchecklist = 0">
+            <span class="glyphicon glyphicon-remove"></span>
+            Close
+        </div>
+    </div>
+    
+    <div id="checklist-view" ng-show="showchecklist == 1">
+        
+        <div class="checklist-header">
+            <!--<div class="checklist-head-label">Checklist <span class="checklist-id">{{ checklistdetail.id }}</span> - </div>-->
+            <div class="checklist-name">
+                {{ checklistdetail.name }}
+                <div class="action-set" ng-hide="editMode == 0">
+                    <span class="glyphicon glyphicon-edit text-edit" title="Edit checklist name" ng-click="editChecklistName()"></span>
+                </div>            
+            
+            </div>  
+            <div class="new-checklist-group text-duplicate" ng-click="newChecklistGroup();" ng-hide="editMode == 0">
+                <span class="glyphicon glyphicon-plus"></span>
+                New group
+            </div>
+        </div>
+        
+        <div class="checklist-row header">
+            <div>Do you have?</div>
+            <div>Yes</div>
+            <div>No</div>
+            <div>Corrective action</div>
+            <div>Proposed completion date</div>
+            <div>Allocated to</div>
+        </div>
+        
+        <div ng-repeat="c in checkList">
+            <div class="checklist-row section-header">
+                <div>{{c.name}}</div>
+                <div class="action-set" ng-hide="editMode == 0">
+                    <span class="glyphicon glyphicon-plus text-duplicate" title="New item" ng-click="newItem(c)"></span>&nbsp;
+                    <span class="glyphicon glyphicon-edit text-edit" title="Edit item" ng-click="editItem(c)"></span>&nbsp;
+                    <span class="glyphicon glyphicon-trash text-danger" title="Delete item" ng-click="deleteItem(c)"></span>&nbsp;
+                    <span class="glyphicon glyphicon-arrow-up" title="Move up" ng-hide="$index == 0" ng-click="reorderItem(0,c)"></span>&nbsp;
+                    <span class="glyphicon glyphicon-arrow-down" title="Move down" ng-hide="$index == clLength - 1" ng-click="reorderItem(1,c)"></span>
+                </div>
+            </div>
+
+            <div class="checklist-row " ng-repeat="item in c.subitems">
+                <div>{{item.name}}</div>
+                <div><input type="checkbox" value="1" /></div>
+                <div><input type="checkbox" value="0" /></div>
+                <div></div>
+                <div></div>
+                <div>
+                    <div class="action-set detail-row" ng-hide="editMode == 0">
+                        <span class="glyphicon glyphicon-edit text-edit" title="Edit item" ng-click="editItem(item)"></span>&nbsp;
+                        <span class="glyphicon glyphicon-trash text-danger" title="Delete item" ng-click="deleteItem(item)"></span>&nbsp;
+                        <span class="glyphicon glyphicon-arrow-up" title="Move up" ng-hide="$index == 0" ng-click="reorderItem(0,item)"></span>&nbsp;
+                        <span class="glyphicon glyphicon-arrow-down" title="Move down" ng-hide="$index == c.subitems.length - 1" ng-click="reorderItem(1,item)"></span>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

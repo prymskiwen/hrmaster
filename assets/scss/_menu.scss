@@ -1,0 +1,152 @@
+@import "colors";
+
+.top-nav {
+    .shell {
+        height: 59px;
+    }
+    @include mq($until: l) {
+        margin: 5px 0;
+    }
+}
+
+#header {
+    margin-top: 0;
+
+    .main_title {
+        color: $color__white;
+        font-size: 6.5rem;
+        font-weight: $global__font-weight--bold;
+    }
+    .main_subtitle {
+        color: $color__white;
+        font-size: 2.3rem;
+        text-shadow: rgba(0,0,0,0.5) 0 .1rem .2rem;
+    }
+    .mobile {
+        color: $color__white;
+        font-size: 1.2rem;
+        text-shadow: rgba(0,0,0,0.5) 0 .1rem .2rem;
+    }
+}
+
+
+menu {
+    margin-top: -1rem;
+
+    &.top-nav {
+        ul {
+            display: block;
+        }
+
+        a.nav-btn {
+            @include mq($from: l) {
+                display: none;
+            }
+        }
+
+        .non-mobile {
+            display: none;
+            @include mq($from: l) {
+                display: block;
+            }
+        }
+
+        .mobile {
+            display: none;
+            @include mq($until: l) {
+                display: block;
+            }
+        }
+
+
+    }
+
+    &.nav {
+        ul {
+            list-style: none;
+            background-color: $color__menu-bg;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            font-size: 1.2em;
+            line-height: 5rem;
+            text-align: left;
+        }
+        a {
+            text-decoration: none;
+            text-transform: uppercase;
+            color: $color__menu_text;
+            display: block;
+            padding-left: 1.5rem;
+            border-bottom: 0 solid #888;
+            transition: .3s background-color;
+
+            &:hover {
+                background-color: $color__menu-hover;
+                color: $color__white;
+            }
+        }
+    }
+}
+
+
+/* Sub Menus */
+.nav li li {
+  font-size: .8em;
+}
+
+/*******************************************
+   Style menu for larger screens
+
+   Using 650px (130px each * 5 items), but ems
+   or other values could be used depending on other factors
+********************************************/
+
+@media screen and (min-width: 650px) {
+  .nav li {
+    width: 13rem;
+    border-bottom: none;
+    height: 6rem;
+    line-height: 6rem;
+    font-size: 1.4em;
+    display: inline-block;
+    margin-right: -.4rem;
+    padding-top: 1rem;
+  }
+
+  .nav a {
+    border-bottom: none;
+  }
+
+  .nav > ul > li {
+    text-align: center;
+  }
+
+  .nav > ul > li > a {
+    padding-left: 0;
+  }
+
+  /* Sub Menus */
+  .nav li ul {
+    position: absolute;
+    display: none;
+    width: 20rem;
+  }
+
+  .nav li:hover ul {
+    display: block;
+    z-index: 100;
+  }
+
+  .nav li:hover ul a {
+    display: block;
+    width: 20rem;
+  }
+
+  .nav li ul li {
+    display: block;
+    padding-top: 0;
+  }
+}

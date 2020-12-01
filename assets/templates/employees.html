@@ -1,0 +1,1541 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+<style>
+    .md-whiteframe-1dp,
+    .md-whiteframe-z1 {box-shadow: none;border: 1px solid #b6dde7;border-radius: 6px;height: 36px;}
+    md-autocomplete {height: 35px;}
+    md-autocomplete input:not(.md-input) {height: 36px;padding-left: 8px;}
+    md-autocomplete button {margin-right: -20px;}
+    md-virtual-repeat-container:first-child {background-color: red !important;}
+    .md-virtual-repeat-container.md-autocomplete-suggestions-container {border-top: none;border-radius: 0;box-shadow: 0px 7px 14px rgba(0, 0, 0, .25) !important;}
+    html #employees-div .md-padding {overflow: hidden;}
+    .div-lqstatus >div{display: flex;align-items: center;}
+    .div-lqstatus >div input{margin: 0px 15px 0px 0px;}
+    .div-lqstatus >div label{margin: 0px;}
+    button.dropdown-toggle{border: 1px solid #b6dde7!important;width: 100%;display: flex;justify-content: space-between;align-items: center;padding-left: 20px;background-color: white!important;}
+    .dropdown-menu.issue-dropdown{margin-left: 0px;}
+    .dropdown-menu.issue-dropdown >li a{font-size:13px;}
+    .dropdown-submenu{position:relative;}
+    .dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
+    .dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
+    .dropdown-submenu:hover>a:after{border-left-color:#555;}
+    .dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+
+</style>
+
+
+<div class="container" id="employees-div">
+
+    <h3>{{pageTitle}}</h3>
+
+    <button class="new-emp btn btn-primary" ng-click="newEmployee()">New Employee</button>
+
+    <div class="clear"></div>
+
+    <div class="clear"></div>
+
+    <div class="grid employee-grid" external-scopes="clickHandler" ui-grid="gridOptionsComplex" ui-grid-edit ui-grid-resize-columns ui.grid.selection></div>
+
+    <form name="empform" ng-class="{'disabled': formEnabled == 0}" novalidate>
+        <md-content>
+            <md-tabs md-dynamic-height md-border-bottom  md-selected="tb.mdSelected">
+                <md-tab label="personal detail" ng-click="startPersonalDetailPage()">
+                    <md-content class="md-padding">
+                        <!--  add flag   -->
+                        <div ng-if="is_flag" ng-switch="flag.flag_id" ng-repeat="flag in flags" style="border-width:1px;border-bottom-style:solid;border-color:blue">
+                            <div ng-switch-when="1" style="width: 100%; background-color:black; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>WARNING FLAG ENTERED by {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;" ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="2" style="width: 100%; background-color:rgb(28, 138, 28); color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>MEDICAL ISSUE FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="3" style="width: 100%; background-color:blue; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>WORKERS COMPENSATION FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="4" style="width: 100%; background-color:red; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>DISCIPLINE FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="5" style="width: 100%; background-color:yellow; color:BLACK;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>PAYROLL FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:black; padding:10px;" ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:black" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div id="tab1" class="tab-pane fade in active">
+
+                            <fieldset ng-disabled="employee_write == false || formEnabled == 0">
+
+                                <div class="col-md-12 tabborder">
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+
+
+
+                                            <emp-field fld-label="First Name" ng-model="emp.firstname" ng-required="formEnabled == 1"></emp-field>
+
+                                            <emp-field fld-label="Last Name" ng-model="emp.lastname" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Email" ng-model="emp.email" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Address" ng-model="emp.address1" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Suburb" ng-model="emp.suburb" ng-required="formEnabled == 1"></emp-field>
+
+
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="state">State</label>
+                                                <div class="col-sm-8">
+                                                    <select class="form-control" ng-model="emp.state" ng-required="formEnabled == 1"
+                                                            ng-init="emp.state = ''">
+                                                        <option value="">Please select..</option>
+                                                        <option value="{{s.id}}" ng-repeat="s in stateList">{{
+                                                            s.display_text }}</option>
+                                                    </select>
+                                                    <span id="errormsg_emp_state_id" style="display:none;" class="text-danger">Select
+                                                        State</span>
+                                                </div>
+                                            </div>
+
+
+
+                                            <emp-field fld-label="Postcode" ng-model="emp.postcode" ng-required="formEnabled == 1"></emp-field>
+
+
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="title">Title</label>
+                                                <div class="col-sm-8">
+                                                    <select class="form-control" ng-model="emp.title" ng-required="formEnabled == 1"ng-init="emp.title = ''">
+                                                        <option value="">Please select..</option>
+                                                        <option value="{{p.id}}" ng-repeat="p in personList">{{p.display_text }}</option>
+                                                    </select>
+                                                    <span id="errormsg_emp_title" style="display:none;" class="text-danger">Select Title</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="gender">Gender</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="form-control" ng-model="emp.gender" ng-required="formEnabled == 1"
+
+                                                            ng-init="emp.gender=''">
+
+                                                        <option value="">Please select..</option>
+
+                                                        <option value="M">Male</option>
+
+                                                        <option value="F">Female</option>
+
+                                                    </select>
+
+                                                    <span id="errormsg_emp_gender" style="display:none;" class="text-danger">Select
+
+                                                        Gender</span>
+
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <emp-field fld-label="Phone" ng-model="emp.telephone"></emp-field>
+
+                                            <emp-field fld-label="Mobile" ng-model="emp.mobile"></emp-field>
+
+
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="dob">Date of Birth</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <div class="field-container" ng-class="formEnabled==1 && empform.dob.$valid == false ?'invalid' : ''">
+
+                                                        <div class="field">
+
+                                                            <md-datepicker name="dob" ng-model="emp.dob"
+
+                                                                           md-hide-icons="all" md-current-view="year"
+
+                                                                           md-is-open="empdob.isOpen" ng-required="formEnabled == 1"></md-datepicker>
+
+                                                        </div>
+
+                                                        <div class="icon">
+
+                                                            <button ng-click="empdob.isOpen = true" type="button">
+
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+
+                                                            </button>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <span id="errormsg_emp_dob" style="display:none;" class="text-danger">Enter
+
+                                                        Date of Birth</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="nationality">Nationality</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="form-control" ng-model="emp.nationality" ng-required="formEnabled == 1" ng-init="emp.nationality=''">
+                                                        <option value="">Please select..</option>
+                                                        <option value="{{c.id}}" ng-repeat="c in countryList" ng-selected="c.id == emp.nationality">{{ c.display_text }}</option>
+                                                    </select>
+
+                                                    <span id="errormsg_emp_nationality" style="display:none;" class="text-danger">Select
+                                                        Nationality</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="emp_visa_type">VISA Type</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" ng-model="emp.visatype" ng-required="false">
+                                                    <span id="errormsg_emp_visa_type" style="display:none;" class="text-danger">Enter
+                                                        VISA Type</span>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="visaexpiry">Visa Expiry</label>
+                                                <div class="col-sm-8">
+                                                    <div class="field-container" ng-class="formEnabled == 1 && !empform.visaexpiry.$valid ? 'invalid' : ''">
+                                                        <div class="field">
+                                                            <md-datepicker name="visaexpiry" ng-model="emp.visaexpiry"
+                                                                           md-placeholder="" md-hide-icons="all"
+                                                                           md-is-open="empvisa.isOpen" ng-required="false"></md-datepicker>
+                                                        </div>
+                                                        <div class="icon">
+                                                            <button ng-click="empvisa.isOpen = true" type="button">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <span id="errormsg_emp_visa_expiry" style="display:none;" class="text-danger">Enter
+
+                                                        Visa Expiry</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <emp-field fld-label="" fld-type="hidden" ng-model="emp.id"></emp-field>
+
+                                            <emp-field fld-label="" fld-type="hidden" ng-model="emp.account_id"></emp-field>
+
+                                            <emp-field fld-label="" fld-type="hidden" ng-model="emp.update_by"></emp-field>
+
+                                            <emp-field fld-label="" fld-type="hidden" ng-model="emp.added_by"></emp-field>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </fieldset>
+
+                        </div>
+
+                    </md-content>
+                </md-tab>
+
+                <md-tab label="work detail" ng-click="startWorkDetailPage()">
+                    <md-content class="md-padding">
+
+                        <!--  add flag   -->
+                        <div ng-if="is_flag" ng-switch="flag.flag_id"  ng-repeat="flag in flags" style="border-width:1px;border-bottom-style:solid;border-color:blue">
+                            <div ng-switch-when="1" style="width: 100%; background-color:black; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>WARNING FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;" ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+                            <div ng-switch-when="2" style="width: 100%; background-color:rgb(28, 138, 28); color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>MEDICAL ISSUE FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="3" style="width: 100%; background-color:blue; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>WORKERS COMPENSATION FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="4" style="width: 100%; background-color:red; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>DISCIPLINE FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+                            <div ng-switch-when="5" style="width: 100%; background-color:yellow; color:BLACK;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>PAYROLL FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:black; padding:10px;" ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:black" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+                        </div>
+
+                        <div id="tab2" class="tab-pane">
+
+                            <fieldset ng-disabled="employee_write == false || formEnabled == 0">
+
+                                <div class="col-md-12 tabborder">
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+
+                                            <emp-field fld-label="Employee Code" ng-model="empwork.emp_code" ng-required="formEnabled == 1"></emp-field>
+                                            
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4">Start Date</label>
+                                                <div class="col-sm-8">
+                                                    <div class="field-container" ng-class="formEnabled==1 && empform.start_date.$valid == false ? 'invalid' : ''">
+                                                        <div  class="field">
+                                                            <md-datepicker name="start_date" ng-model="empwork.start_date"
+                                                                           md-hide-icons="all"
+                                                                           md-is-open="empstdate.isOpen" ng-required="formEnabled == 1"></md-datepicker>
+                                                        </div>
+                                                        <div class="icon">
+                                                            <button ng-click="empstdate.isOpen = true" type="button">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <span id="startdate_error" style="display:none;" class="text-danger">Enter
+                                                        State Date</span>
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="end_date">End Date</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <div class="field-container">
+
+                                                        <div class="field">
+
+                                                            <md-datepicker ng-model="empwork.end_date"
+
+                                                                           md-placeholder="" md-hide-icons="all" md-is-open="empenddate.isOpen"></md-datepicker>
+
+                                                        </div>
+
+                                                        <div class="icon">
+
+                                                            <button ng-click="empenddate.isOpen = true" type="button">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <span id="enddate_error" style="display:none;" class="text-danger">Enter
+                                                        End Date</span>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_hourly_rate">Hourly Rate</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group" style="float:none">
+                                                        <span class="input-group-addon">$</span>
+                                                        <input type="text" ng-keyup="updateRates('hourly_rate')" ng-required="formEnabled == 1" ng-model="empwork.hourly_rate" class="form-control" style="padding-right:13px;" format="currency">
+                                                    </div>
+                                                    <span id="hourly_error" style="display:none;" class="text-danger">Select Hourly Rate</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_weeklyrate">Weekly Rate</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group" style="float:none">
+                                                        <span class="input-group-addon">$</span>
+                                                        <input type="text" ng-required="formEnabled == 1" ng-keyup="updateRates('weekly_rate')" ng-model="empwork.weekly_rate" class="form-control" style="padding-right:13px;" format="currency">
+                                                    </div>
+                                                    <span id="weekly_error" style="display:none;" class="text-danger">Select Weekly Rate</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_annual_rate">Annual Rate</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group" style="float:none">
+                                                        <span class="input-group-addon">$</span>
+                                                        <input type="text" ng-required="formEnabled == 1" ng-keyup="updateRates('annual_rate')" ng-model="empwork.annual_rate"
+                                                               class="form-control" style="padding-right:13px;" format="currency">
+                                                    </div>
+                                                    <span id="annual_error" style="display:none;" class="text-danger">Select Annual Rate</span>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_Bonus">Bonus</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group" style="float:none">
+                                                        <span class="input-group-addon">$</span>
+                                                        <input type="text" ng-model="empwork.bonus" class="form-control" style="padding-right:13px;" format="currency">
+                                                    </div>
+                                                    <span id="bonus_error" style="display:none;" class="text-danger">Select Bonus</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_Commission">Commission</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group" style="float:none">
+                                                        <span class="input-group-addon">$</span>
+                                                        <input type="text" ng-model="empwork.commission" class="form-control" style="padding-right:13px;" format="currency">
+                                                    </div>
+                                                    <span id="commission_error" style="display:none;" class="text-danger">Select Commission</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_Overtime">Overtime</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group" style="float:none">
+                                                        <span class="input-group-addon">$</span>
+                                                        <input type="text" ng-model="empwork.overtime" class="form-control" style="padding-right:13px;" format="currency">
+                                                    </div>
+                                                    <span id="overtime_error" style="display:none;" class="text-danger">Select Overtime</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- <emp-field fld-label="Overtime" ng-model="empwork.overtime" ng-required="formEnabled == 1"></emp-field>-->
+                                            <emp-field fld-label="Weekly Hours" ng-keyup="updateRates('hours_week')" ng-model="empwork.hours_week" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Days of week" ng-model="empwork.days_week" ng-required="formEnabled == 1"></emp-field>
+                                        </div>
+
+                                        <div class="col-md-6">
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_position">Position</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="form-control" ng-model="empwork.position"
+                                                            ng-required="formEnabled == 1" ng-init="empwork.position=''">
+                                                        <option value="">Please select..</option>
+                                                        <option value="{{p.id}}" ng-repeat="p in positionList">{{
+                                                            p.display_text }}</option>
+                                                    </select>
+
+                                                    <span id="position_error" style="display:none;" class="text-danger">Select
+
+                                                        Position</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_position">Report To</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="form-control" ng-model="empwork.report_to"
+                                                            ng-required="formEnabled == 1" ng-init="empwork.report_to=''">
+                                                        <option value="">Please select..</option>
+                                                        <option value="{{p.id}}" ng-repeat="p in positionList">{{
+                                                            p.display_text }}</option>
+                                                    </select>
+
+                                                    <span id="report_error" style="display:none;" class="text-danger">Select
+
+                                                        Position</span>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_level" ng-required="formEnabled == 1">Level</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="form-control" ng-model="empwork.level" ng-required="formEnabled == 1"
+
+                                                            ng-init="empwork.level=''">
+
+                                                        <option value="">Please select..</option>
+
+                                                        <option value="{{l.id}}" ng-repeat="l in levelList">{{
+
+                                                            l.display_text }}</option>
+
+                                                    </select>
+
+                                                    <span id="errormsg_empw_level" style="display:none;" class="text-danger">Select
+
+                                                        Level</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_department">Department</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="form-control" ng-model="empwork.department"
+
+                                                            ng-required="formEnabled == 1" ng-init="empwork.department=''">
+
+                                                        <option value="">Please select..</option>
+
+                                                        <option value="{{d.id}}" ng-repeat="d in departmentList">{{
+
+                                                            d.display_text }}</option>
+
+                                                    </select>
+
+                                                    <span id="errormsg_empw_department" style="display:none;" class="text-danger">Select
+
+                                                        Department</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_state">State</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="form-control" ng-model="empwork.workstate"
+
+                                                            ng-required="formEnabled == 1" ng-init="empwork.workstate=''">
+
+                                                        <option value="">Please select..</option>
+
+                                                        <option value="{{ws.id}}" ng-repeat="ws in stateList">{{
+
+                                                            ws.display_text }}</option>
+
+                                                    </select>
+
+                                                    <span id="errormsg_empw_state" style="display:none;" class="text-danger">Select
+
+                                                        State</span>
+
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_entitle">Site Location</label>
+                                                <div id="empw_entitle" class="col-sm-8">
+                                                    <md-autocomplete flex md-input-name="site_location"
+                                                                     md-no-cache="ew.noCache" md-selected-item="site_location"
+                                                                     md-search-text="ew.searchText" xmd-selected-item-change="selectSite()"
+                                                                     md-items="item in querySearch(ew.searchText)" md-item-text="item.display"
+                                                                     >
+                                                        <md-item-template>
+                                                            <span md-highlight-text="ew.searchText">{{item.display}}</span>
+                                                        </md-item-template>
+                                                    </md-autocomplete>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_emp_type">Employee Type</label>
+                                                <div id="empw_emp_type" class="col-sm-8">
+                                                    <select class="form-control" ng-model="empwork.employment_type_id"
+                                                            ng-required="formEnabled == 1" ng-init="empwork.employment_type_id=''">
+                                                        <option value="">Please select..</option>
+                                                        <option value="{{c.id}}" ng-repeat="c in emptypeList">{{
+                                                            c.display_text }}</option>
+                                                    </select>
+                                                    <span id="errormsg_empw_emp_type" style="display:none;" class="text-danger">Select
+                                                        Employee Type</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_personal_leave_taken">Personal
+
+                                                    leave taken</label>
+
+                                                <div id="empw_personal_leave_taken" class="col-sm-8">
+
+                                                    <input type="text" class="form-control" ng-model="empwork.personal_leave_taken"
+
+                                                           placeholder="">
+
+                                                    <span id="errormsg_empw_personal_leave_taken" style="display:none;"
+
+                                                          class="text-danger">Enter Personal leave taken</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_annual_leave_owing">Annual
+
+                                                    leave</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <input type="text" class="form-control" ng-model="empwork.annual_leave_owing"
+
+                                                           placeholder="">
+
+                                                    <span id="errormsg_empw_annual_leave_owing" style="display:none;"
+
+                                                          class="text-danger">Enter Annual leave</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_personal_leave_owing">Personal
+
+                                                    leave</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <input type="text" class="form-control" ng-model="empwork.personal_leave_owing"
+
+                                                           placeholder="">
+
+                                                    <span id="errormsg_empw_personal_leave_owing" style="display:none;"
+
+                                                          class="text-danger">Enter Personal leave</span>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <emp-field fld-label="Work Email" ng-required="formEnabled == 1" ng-model="empwork.work_email"></emp-field>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </fieldset>
+
+                        </div>
+
+
+
+                    </md-content>
+
+                </md-tab>
+
+                <!-- --------------- newly added ------------ -->
+
+                <md-tab label="employee notes" ng-click="startEmployeeNotesPage()" ng-if="employee_notes_read">
+
+                    <md-content class="md-padding"  id="employee_notes">
+
+
+
+                        <!--  add flag   -->
+
+                        <div ng-if="is_flag" ng-switch="flag.flag_id" ng-repeat="flag in flags" style="border-width:1px;border-bottom-style:solid;border-color:blue">
+                            <div ng-switch-when="1" style="width: 100%; background-color:black; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>WARNING FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;" ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="2" style="width: 100%; background-color:rgb(28, 138, 28); color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>MEDICAL ISSUE FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="3" style="width: 100%; background-color:blue; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>WORKERS COMPENSATION FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="4" style="width: 100%; background-color:red; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>DISCIPLINE FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+
+                            <div ng-switch-when="5" style="width: 100%; background-color:yellow; color:BLACK;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+                                <span>PAYROLL FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+                                <a style="color:black; padding:10px;" ng-click="viewNote(flag)">Click to View</a>
+                                <a style="color:black" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove Flag</a>
+                            </div>
+                        </div>
+
+                        <div id="tab3" class="tab-pane">
+
+                            <fieldset ng-disabled="employee_notes_write == false">
+
+                                <div class="col-md-12 tabborder">
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+
+
+
+                                            <div class="form-group row">
+
+                                                <!--  select issue  -->
+
+                                                <div class="col-sm-5">
+
+                                                    <div class="dropdown " ng-model="empwork.hr_issue"
+
+                                                         ng-init="empwork.hr_issue=''"
+
+                                                         ng-focus="startCount()" >
+                                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                                                                ng-disabled="noteFormEnabled == false">
+                                                            {{empwork.hr_issue === '' || empwork.hr_issue == null ? 'Select HR Issue': empwork.hr_issue}}
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu issue-dropdown">
+                                                            <li class="dropdown-item" value=""><a href="javascript:void(0)">Select HR Issue</a></li>
+                                                            <li class="dropdown-item" value="{{ hr_i.display_text }}" ng-if="!((hr_i.display_text == 'Worker\'s Compensation' || hr_i.display_text == 'Workers Compensation' ) && incident.length > 0)" ng-click="empwork.hr_issue = hr_i.display_text" ng-repeat="hr_i in hr_issue_list">
+                                                                <a>{{hr_i.display_text}}</a>
+                                                            </li>
+                                                            <li class="dropdown-submenu dropdown" value="{{ hr_i.display_text }}" ng-if="(hr_i.display_text == 'Worker\'s Compensation' || hr_i.display_text == 'Workers Compensation' ) && incident.length > 0" ng-click="empwork.hr_issue = hr_i.display_text" ng-repeat="hr_i in hr_issue_list">
+                                                                <a class="dropdown-toggle">{{hr_i.display_text}}</span></a>
+                                                                <ul class="dropdown-menu">
+                                                                    <li class="dropdown-item" value="inci_date.injury_id" ng-repeat="inci_date in incident" ng-click="empwork.injury_id = inci_date.injury_id"><a>{{inci_date.injury_date}}</a></li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+
+                                                <!--  select flag  -->
+
+                                                <div class="col-sm-2"></div>
+
+                                                <div class="col-sm-5">
+
+                                                    <select class="form-control" ng-model="empwork.flag" ng-init="empwork.flag=''" ng-disabled="noteFormEnabled == false">
+
+                                                        <option value="">Select Flag</option>
+
+                                                        <option value="{{fg.id}}" ng-repeat="fg in flag_list">{{
+
+                                                            fg.display_text }}</option>
+
+                                                    </select>
+
+                                                </div>
+
+
+
+                                            </div>
+
+
+
+                                            <div class="form-group row">
+
+                                                <!--  note issue  -->
+
+                                                <div class="col-sm-12">
+
+                                                    <textarea class="form-control" ng-model="empwork.hr_issue_con"
+
+                                                              placeholder="" rows="4" ng-keyup="hrIssueConChange()" ng-disabled="noteFormEnabled == false"></textarea>
+
+                                                    <span id="errormsg_empw_hr_issue" style="display:none;"
+
+                                                          class="text-danger">enter issue note</span>
+                                                    <span class="pull-right" style="color:red">{{hr_issue_cha}}/3000</span>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <!--  select action  -->
+                                                <div class="col-sm-5">
+                                                    <select class="form-control" ng-model="empwork.hr_action"
+                                                            ng-init="empwork.hr_action=''" ng-disabled="noteFormEnabled == false">
+                                                        <option value="">Select HR Action</option>
+                                                        <option value="{{ hr_a.display_text }}" ng-repeat="hr_a in hr_action_list">{{
+                                                            hr_a.display_text }}</option>
+                                                    </select>
+                                                    <span id="errormsg_empw_hr_action" style="display:none;" class="text-danger">Select
+                                                        Action</span>
+                                                </div>
+                                                <div class="col-sm-7"></div>
+                                            </div>
+                                            <div class="form-group row">
+
+                                                <!--  note action  -->
+                                                <div class="col-sm-12">
+                                                    <textarea class="form-control" ng-model="empwork.hr_action_con"
+                                                              placeholder="" rows="4"
+                                                              ng-change="hrActionConChange()" ng-disabled="noteFormEnabled == false"></textarea>
+                                                    <span id="errormsg_empw_hr_action_con" style="display:none;" class="text-danger">Enter
+                                                        action note</span>
+                                                    <span class="pull-right" style="color:red">{{ hr_action_cha }}/3000</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_position">Tag
+
+                                                    this entry to another employee</label>
+
+
+                                                <!--  search  tagged employee  -->
+
+                                                <div class="col-sm-6">
+                                                    <md-autocomplete flex md-input-name="tagged_employee" md-no-cache="en.noCache"
+                                                                     md-selected-item="en.tagged_employee" md-search-text="en.searchText"
+                                                                     md-selected-item-change="selectTaggedEmployee()" md-items="item in en.querySearch(en.searchText)"
+                                                                     md-item-text="item.display" ng-disabled="noteFormEnabled == false">
+                                                        <md-item-template>
+                                                            <span md-highlight-text="en.searchText">{{item.display}}</span>
+                                                        </md-item-template>
+                                                    </md-autocomplete>
+                                                </div>
+
+                                                <!--  tag entry button  -->
+
+
+
+                                                <div class="col-sm-2" style="padding-left:0px;">
+
+                                                    <button class="btn btn-primary" ng-click="tagEntry()" ng-disabled="noteFormEnabled == false">Tag Entry</button>
+
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_position">Add
+
+                                                    a pdf or doc to this entry</label>
+
+
+                                                <!--  Upload  -->
+
+                                                <div class="col-sm-6">
+                                                    <input type="file" class="file" style="visibility: hidden;position: absolute;" file-model="myFile" name="myFile">
+                                                    <div class="input-group">
+
+                                                        <input type="text" class="form-control" disabled placeholder="Upload File" id="file_name">
+                                                        <span class="input-group-btn">
+                                                                <button class="browse btn btn-primary" type="button"  ng-disabled="noteFormEnabled == false">
+                                                                <i class="glyphicon glyphicon-search" ></i> Browse</button>
+                                                            </span>
+                                                    </div>
+                                                </div>
+
+                                                <!--  Download  -->
+
+                                                <div class="col-sm-2"  style="padding-left:0px;">
+
+                                                    <a ng-click="fileDownload()" class="btn btn-primary" ng-class="{'disabled':  downloadable_file == ''}" ng-href="../../{{downloadable_file}}" download>Download</a>
+
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <!--  Timer  -->
+
+                                                <div class="col-sm-2" style="padding-right:0px;">
+
+                                                    <input type="text" ng-model="empwork.timer" class="form-control"
+
+                                                           ng-init="empwork.timer = '00:00:00'" ng-disabled="true">
+
+                                                </div>
+
+                                                <!--  Time Allocated  -->
+
+                                                <label class="control-label col-sm-2" for="empw_position" style="padding-right:0px;">Allocate Time</label>
+
+                                                <!--  select hour  -->
+
+                                                <div class="col-sm-2" style="padding-right:0px;">
+
+                                                    <!-- <span style="padding-top:3px;">H&nbsp;</span> -->
+
+                                                    <select class="form-control" ng-model="empwork.hour" ng-init="empwork.hour=''"   ng-disabled="noteFormEnabled == false">
+
+                                                        <option value="">H</option>
+
+                                                        <option value="1">1</option>
+
+                                                        <option value="2">2</option>
+
+                                                        <option value="3">3</option>
+
+                                                        <option value="4">4</option>
+
+                                                    </select>
+
+                                                </div>
+
+                                                <!--  select min  -->
+
+                                                <div class="col-sm-2" style="padding-right:0px;">
+
+                                                    <!-- <div>M</div> -->
+
+                                                    <select class="form-control" ng-model="empwork.min" ng-init="empwork.min=''"  ng-disabled="noteFormEnabled == false">
+                                                        <option value="">M</option>
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                        <option value="25">25</option>
+                                                        <option value="30">30</option>
+                                                        <option value="35">35</option>
+                                                        <option value="40">40</option>
+                                                        <option value="45">45</option>
+                                                        <option value="50">50</option>
+                                                        <option value="55">55</option>
+                                                    </select>
+
+                                                </div>
+                                                <label class="control-label col-sm-3" style="padding-right:0px;padding-top:7px;" for="empw_position">Mark as Confidential</label>
+                                                <!--  Mark as Confidential  -->
+
+                                                <div class="col-sm-1">
+
+                                                    <input type="checkbox" ng-model="empwork.mark_c" ng-true-value="1"
+
+                                                           ng-false-value="0" ng-checked="empwork.mark_c == 1" ng-disabled="noteFormEnabled == false">
+
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="log_date">Log Date</label>
+
+                                                <div class="col-sm-8">
+                                                    <div class="field-container" style="height: 40px;" >
+                                                        <md-datepicker name="log_date" ng-model="employee_notes_data.log_date"
+                                                                       ng-change="onChangeLogDate()"
+                                                                       ng-disabled="noteFormEnabled == false"
+                                                                       md-placeholder="" class="field"
+                                                                       md-is-open="emplogdate.isOpen"
+                                                        ></md-datepicker>
+<!--                                                        <div class="field">-->
+<!--                                                            -->
+<!--                                                        </div>-->
+                                                        <!--<div class="icon">
+                                                            <button ng-click="emplogdate.isOpen = true" type="button">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                            </button>
+                                                        </div>-->
+                                                    </div>
+                                                    <span id="errormsg_emp_log_date" style="display:none;" class="text-danger">Enter
+                                                        Log Date</span>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+
+                                            <!--  log history   -->
+
+                                            <div class="row" style="margin-left: 0px; margin-right: 0px;">
+
+                                                <table class="table table-striped" id="course_table" style="table-layout: fixed; width: 100%">
+
+                                                    <thead style="background-color: #b3dce6; color: white;">
+                                                    <tr>
+                                                        <th ng-click="sort('updated_time')" style="text-align: center;width:15%;vertical-align: text-top">Date
+                                                            <span class="fa sort-icon" ng-show="sortKey=='updated_time'"
+                                                                  ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                                                        </th>
+                                                        <th ng-click="sort('hr_issue')" style="text-align: center;width:30%;vertical-align: text-top">Issue
+                                                            <span class="fa sort-icon" ng-show="sortKey=='hr_issue'"
+                                                                  ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                                                        </th>
+                                                        <th ng-click="sort('hr_action')" style="text-align: center;width:30%;vertical-align: text-top">Action
+                                                            <span class="fa sort-icon" ng-show="sortKey=='hr_action'"
+                                                                  ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                                                        </th>
+
+                                                        <th ng-click="sort('subscriber')" style="text-align: center;width:15%">Entered
+                                                            <span class="fa sort-icon" ng-show="sortKey=='subscriber'" ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                                                        </th>
+
+                                                        <th style="text-align: center;width:10%;vertical-align: text-top">Action</th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+
+                                                    <tr dir-paginate="log in all_logs|filter:search|itemsPerPage:6">
+                                                        <td style="text-align: Left;width:15%"> {{log.updated_time}} </td>
+
+                                                        <td ng-hide="log.mark_c == 1 || selectedEmpDetail.id == log.tagged_user_id" style="width:30%;word-wrap: break-word">
+                                                            <p dd-text-collapse dd-text-collapse-max-length="65" dd-text-collapse-text="{{log.hr_issue}}: {{log.hr_issue_note}}"></p>
+                                                        </td>
+
+                                                        <td ng-hide="log.mark_c == 1 || selectedEmpDetail.id != log.tagged_user_id" style="width:30%;word-wrap: break-word">
+                                                            This employee was tagged in another note.
+                                                        </td>
+
+                                                        <td ng-hide="log.mark_c != 1 || account_id == log.subscriber_id" style="width:30%;word-wrap: break-word">
+                                                            Marked as Confidential
+                                                        </td>
+
+                                                        <td ng-hide="log.mark_c != 1 || account_id != log.subscriber_id" style="width:30%;word-wrap: break-word">
+                                                            <p dd-text-collapse dd-text-collapse-max-length="65" dd-text-collapse-text="{{log.hr_issue}}: {{log.hr_issue_note}}"></p>
+                                                        </td>
+
+                                                        <td ng-hide="log.mark_c == 1 || selectedEmpDetail.id == log.tagged_user_id" style="width:30%;word-wrap: break-word">
+                                                            <p dd-text-collapse dd-text-collapse-max-length="65" dd-text-collapse-text="{{log.hr_action}}: {{log.hr_action_note}}"></p>
+                                                        </td>
+
+                                                        <td ng-hide="log.mark_c == 1 || selectedEmpDetail.id != log.tagged_user_id" style="width:30%;word-wrap: break-word">
+                                                            This employee was tagged in another note.
+                                                        </td>
+
+                                                        <td ng-hide="log.mark_c != 1 || account_id == log.subscriber_id" style="width:30%;word-wrap: break-word">Marked as Confidential</td>
+
+                                                        <td ng-hide="log.mark_c != 1 || account_id != log.subscriber_id" style="width:30%;word-wrap: break-word">
+                                                            <p dd-text-collapse dd-text-collapse-max-length="65" dd-text-collapse-text="{{log.hr_action}}: {{log.hr_action_note}}"></p>
+                                                        </td>
+
+                                                        <td style="text-align: center;" style="width:15%;word-wrap: break-word">
+                                                            <span ng-class="course.status_class">{{log.subscriber}}</span>
+                                                        </td>
+
+                                                        <td ng-hide="log.mark_c == 1"style="text-align: center;width:10%">
+                                                            <a class="action-button" ng-click="viewLog(log)" ng-if="employee_notes_read">View <br></a>
+                                                            <a class="action-button" ng-click="editLog(log)" ng-if="employee_notes_write">Edit <br></a>
+                                                            <a class="action-button" ng-click="removeLog(log)" ng-if="employee_notes_delete">Remove <br></a>
+                                                        </td>
+                                                        <td ng-hide="log.mark_c != 1 || account_id == log.subscriber_id"style="width:10%;word-wrap: break-word">
+                                                            Please speak to {{log.subscriber}}
+                                                        </td>
+                                                        <td ng-hide="log.mark_c != 1 || account_id != log.subscriber_id" style="width:10%;text-align: center;">
+                                                            <a class="action-button" ng-click="viewLog(log)" ng-if="employee_notes_read">View <br></a>
+                                                            <a class="action-button" ng-click="editLog(log)" ng-if="employee_notes_write">Edit <br></a>
+                                                            <a class="action-button" ng-click="removeConf(log)" ng-if="employee_notes_delete">Remove <br></a>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <div style="height: 100px; text-align: center;">
+
+                                                    <dir-pagination-controls max-size="6" direction-links="true"
+
+                                                                             boundary-links="true">
+
+                                                    </dir-pagination-controls>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </fieldset>
+
+                        </div>
+
+
+
+                    </md-content>
+
+                </md-tab>
+
+                <md-tab label="licenses & qualifications" ng-click="startLQPage()" ng-if="license_read">
+                    <md-content >
+
+
+
+                        <!--  add flag   -->
+
+                        <div ng-if="is_flag" ng-switch="flag.flag_id"  ng-repeat="flag in flags" style="border-width:1px;border-bottom-style:solid;border-color:blue">
+
+                            <div ng-switch-when="1" style="width: 100%; background-color:black; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+
+                                <span>WARNING FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+
+                                <a style="color:white; padding:10px;" ng-click="viewNote(flag)">Click to View</a>
+
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove flag</a>
+
+                            </div>
+
+                            <div ng-switch-when="2" style="width: 100%; background-color:rgb(28, 138, 28); color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+
+                                <span>MEDICAL ISSUE FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove flag</a>
+
+                            </div>
+
+                            <div ng-switch-when="3" style="width: 100%; background-color:blue; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+
+                                <span>WORKERS COMPENSATION FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove flag</a>
+
+                            </div>
+
+                            <div ng-switch-when="4" style="width: 100%; background-color:red; color:white;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+
+                                <span>DISCIPLINE FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+
+                                <a style="color:white; padding:10px;"  ng-click="viewNote(flag)">Click to View</a>
+
+                                <a style="color:white" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove flag</a>
+
+                            </div>
+
+                            <div ng-switch-when="5" style="width: 100%; background-color:yellow; color:BLACK;text-align: center;height:30px;padding-top: 4px;border-width:1px;border-bottom-style:solid;border-color:white">
+
+                                <span>PAYROLL FLAG ENTERED by  {{flag.entered_user_name}} on {{formatDate(flag.updated_time)}}.</span>
+
+                                <a style="color:black; padding:10px;" ng-click="viewNote(flag)">Click to View</a>
+
+                                <a style="color:black" ng-click="removeFlag(flag)" ng-if="employee_notes_write">Remove flag</a>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div id="tab4" class="tab-pane">
+
+                            <fieldset ng-disabled="license_write == false">
+
+                                <div class="col-md-12 tabborder">
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_name">Employee Name</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <input type="text" class="form-control" ng-model="empwork.emp_name" disabled>
+
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_license_name">License/Qualification Name</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="LQNameList form-control" ng-model="empwork.license_name" ng-change="onChangeLQName()"
+
+                                                            ng-disabled="LQFormEnabled == false">
+
+                                                        <option value="">Please select..</option>
+
+                                                        <option value="{{p.display_text}}" ng-repeat="p in license_name_list">{{
+
+                                                            p.display_text }}</option>
+
+                                                        <option value="{{p.display_text}}" ng-selected="p.display_text==selectedLQCourse" ng-repeat="p in event_license_name_list">{{
+
+                                                            p.display_text }}</option>
+
+                                                    </select>
+
+                                                    <span id="lq_error" style="display:none;" class="text-danger">Select
+
+                                                        L/Q Name</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_license_type">Type, Class or Condition</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="form-control" ng-model="empwork.license_type"
+
+                                                            ng-disabled="LQFormEnabled == false">
+
+                                                        <option value="">Please select..</option>
+
+                                                        <option value="{{p.display_text}}" ng-repeat="p in license_type_list">{{
+
+                                                            p.display_text }}</option>
+
+                                                        <option value="{{p.display_text}}" ng-show="p.display_text==selectedLQCourseType" ng-repeat="p in event_license_type_list">{{
+
+                                                            p.display_text }}</option>
+
+                                                    </select>
+
+                                                    <span id="tp_cls_cnd_error" style="display:none;" class="text-danger">Select
+
+                                                        Type, Class or Condition</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_license_number">License/Qualification Number</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <input type="text" class="form-control" ng-model="empwork.license_number" ng-disabled="LQFormEnabled == false">
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_license_issuer">License/Qualification Issuer</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" ng-model="empwork.license_issuer" ng-disabled="LQFormEnabled == false">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_rto">RTO</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" ng-model="empwork.rto" ng-disabled="LQFormEnabled == false">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_cost">Cost</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group" style="float:none">
+                                                        <span class="input-group-addon">$</span>
+                                                        <input type="text" ng-model="empwork.cost" class="form-control" ng-disabled="LQFormEnabled == false" style="padding-right:13px;" format="currency">
+                                                    </div>
+                                                    <span id="cost_error" style="display:none;" class="text-danger">Select
+                                                        Cost</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_cost">LQ Status</label>
+                                                <div class="col-sm-8 row div-lqstatus">
+                                                    <div class="col-sm-6">
+                                                        <input type="radio" ng-model="empwork.lqstatus" value="1" ng-disabled="LQFormEnabled == false" >
+                                                        <label>Completed</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="radio" ng-model="empwork.lqstatus" value="-1" ng-disabled="LQFormEnabled == false" >
+                                                        <label>Not Completed</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="empw_position">Apply to State</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <select class="form-control" ng-model="emp.state" ng-init="emp.state=''" ng-disabled="LQFormEnabled == false">
+
+                                                        <option value="">Please select..</option>
+
+                                                        <option value="{{p.id}}" ng-repeat="p in stateList">{{ p.display_text }}</option>
+
+                                                    </select>
+
+                                                    <span id="state_error" style="display:none;" class="text-danger">Select State</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="date_from">Valid From</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <div class="field-container">
+
+                                                        <div class="field">
+
+                                                            <md-datepicker name="date_from" ng-model="empwork.date_from" ng-change="onLQDateFromChanged()"
+
+                                                                           md-placeholder="" md-hide-icons="all"
+
+                                                                           md-is-open="empstdatefrom.isOpen" ng-disabled="LQFormEnabled == false"
+                                                                           ng-readonly="readonly_lqdatefrom===true"></md-datepicker>
+
+                                                        </div>
+
+                                                        <div class="icon">
+
+                                                            <button ng-click="empstdatefrom.isOpen = true" type="button" ng-disabled="LQFormEnabled == false">
+
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+
+                                                            </button>
+
+                                                        </div>
+
+                                                    </div>
+
+<!--                                                    <span id="error_date_from" style="display:none;" class="text-danger">Enter Valid From Date</span>-->
+
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <div class="form-group row">
+
+                                                <label class="control-label col-sm-4" for="date_expire">Expire Date</label>
+
+                                                <div class="col-sm-8">
+
+                                                    <div class="field-container">
+
+                                                        <div class="field">
+
+                                                            <md-datepicker ng-model="empwork.date_expire"  ng-change="onLQDateExpireChanged()"
+
+                                                                           md-placeholder="" md-hide-icons="all" md-is-open="empexpiredate.isOpen" ng-disabled="LQFormEnabled == false"
+                                                                           ng-readonly="readonly_lqdateexpire===true"></md-datepicker>
+
+                                                        </div>
+
+                                                        <div class="icon">
+
+                                                            <button ng-click="empexpiredate.isOpen = true" type="button" ng-disabled="LQFormEnabled == false">
+
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+
+                                                            </button>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <span id="date_expire" style="display:none;" class="text-danger">Enter
+
+                                                        End Date</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group row">
+
+                                                <!--  Upload  -->
+
+                                                <div class="col-sm-4"></div>
+
+                                                <div class="col-sm-6" style="padding-right:2px">
+
+
+
+                                                    <div class="form-group">
+                                                        <input type="file" class="file" style="visibility: hidden;position: absolute;" file-model2="myFile" name="myFile" ng-model="uploadNotesFile">
+                                                        <div class="input-group col-xs-12">
+                                                            <input type="text" class="form-control" disabled placeholder="Upload File" id="file_name1">
+                                                            <span class="input-group-btn">
+                                                                <button class="browse btn btn-primary" type="button"  ng-disabled="LQFormEnabled == false">
+                                                                <i class="glyphicon glyphicon-search" ></i> Browse</button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <!--  Download  -->
+
+                                                <div class="col-sm-2" style="padding-left:2px">
+
+                                                    <a ng-click="fileDownload()" class="btn btn-primary" ng-class="{'disabled':  lq_downloadable_file == ''}" ng-href="../../{{lq_downloadable_file}}" download>Download</a>
+
+                                                    <!-- <a class="btn btn-primary" ng-class="{'disabled':  lq_downloadable_file == ''}" ng-href="assets/php/download.php?filename={{lq_downloadable_file.split('/')[lq_downloadable_file.split('/').length - 1]}}" target="_blank">Download</a> -->
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+
+                                            <!--  log history   -->
+                                            <div class="row" style="margin-left: 0px; margin-right: 0px;">
+                                                <table class="table table-striped" id="course_table" style="table-layout: fixed; width: 100%">
+                                                    <thead style="background-color: #b3dce6; color: white;">
+                                                    <tr>
+                                                        <th ng-click="sort('license_name')" style="text-align: center;width:22%;vertical-align: text-top">License Name
+                                                            <span class="fa sort-icon" ng-show="sortKey=='updated_time'"
+                                                                  ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                                                        </th>
+                                                        <th ng-click="sort('license_type')" style="text-align: center;width:22%;vertical-align: text-top" >License Type
+                                                            <span class="fa sort-icon" ng-show="sortKey=='hr_issue'"
+                                                                  ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                                                        </th>
+                                                        <th ng-click="sort('licesne_number')" style="text-align: center;width:22%;vertical-align: text-top">License Number
+                                                            <span class="fa sort-icon" ng-show="sortKey=='hr_action'"
+                                                                  ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                                                        </th>
+                                                        <th ng-click="sort('date_expire')" style="text-align: center;width:22%;vertical-align: text-top">Expiry Date
+                                                            <span class="fa sort-icon" ng-show="sortKey=='subscriber'"
+                                                                  ng-class="{'fa-caret-up':reverse,'fa-caret-down':!reverse}"></span>
+                                                        </th>
+                                                        <th style="text-align: center;width:12%;vertical-align: text-top">Action
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    <tr dir-paginate="log in all_LQs|orderBy:sortKey:reverse|filter:search|itemsPerPage:6">
+                                                        <td style="text-align: center;width:22%;vertical-align: middle">
+                                                            {{log.license_name}}
+                                                        </td>
+                                                        <td style="text-align: center;width:22%;vertical-align: middle">
+                                                            {{log.license_type}}
+                                                        </td>
+                                                        <td style="text-align: center;width:22%;vertical-align: middle">
+                                                            {{log.license_number}}
+                                                        </td>
+                                                        <td style="text-align: center;width:22%;vertical-align: middle">
+                                                            {{formatDate1(log.date_expire)}}
+                                                        </td>
+                                                        <td ng-hide="" style="width:10%;text-align: center;">
+                                                            <a class="action-button" ng-click="viewLicense(log)" ng-if="license_read">View <br></a>
+                                                            <a class="action-button" ng-click="editLicense(log)" ng-if="license_write">Edit <br></a>
+                                                            <a class="action-button" ng-click="removeLicense(log)" ng-if="license_delete">Remove <br></a>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+
+                                                </table>
+
+                                                <div style="height: 100px; text-align: center;">
+                                                    <dir-pagination-controls max-size="6" direction-links="true"
+                                                                             boundary-links="true">
+                                                    </dir-pagination-controls>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                    </md-content>
+                </md-tab>
+        </md-content>
+
+        <div class="userMessage">&nbsp;
+            <div id="log_er_msg"></div>
+            <div id="login_error" class="col-xs-12" ng-show="showMessage == 1" style="float: none;">
+                <div class="alert {{ success == 1 ? 'alert-success' : 'alert-danger'}} alert-dismissable" style="padding-right: 45px;">
+                    <i class="fa fa-ban"></i>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="showMessage = 0;">&times;</button>
+                    {{ userMessage }}
+                </div>
+            </div>
+        </div>
+
+        <!--  submit and clear btns  -->
+        <div class="buttons">
+            <!-- -----added -newwly ------ -->
+            <button ng-click="saveEmployee()" value="Submit" class="btn btn-primary" ng-class="{'disabled': empform.$invalid }"
+                    ng-disabled="empform.$invalid || formEnabled == 0" ng-show="!is_notes_page && !is_lq_page">Submit</button>
+
+            <!-- --------------- newly added ------------ -->
+            <button ng-click="saveEmployeeNotes()" value="Submit" class="btn btn-primary" ng-show="is_notes_page" ng-disabled="noteFormEnabled == false">Submit</button>
+            <button ng-click="saveLQ()" value="Submit" class="btn btn-primary" ng-show="is_lq_page" ng-disabled="LQFormEnabled == false">Submit</button>
+            <button class="btn btn-info" ng-click="clearForm()" ng-disabled="formEnabled == 0" style="margin-left: 5px;">Clear</button>
+        </div>
+
+        <!-- --------------- END: Detail area ----------- -->
+
+    </form>
+
+
+
+</div>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreeFileSync XmlFormat="7" XmlType="GUI">
+    <MainConfig>
+        <Comparison>
+            <Variant>TimeAndSize</Variant>
+            <Symlinks>Exclude</Symlinks>
+            <IgnoreTimeShift/>
+        </Comparison>
+        <SyncConfig>
+            <Variant>Update</Variant>
+            <DetectMovedFiles>false</DetectMovedFiles>
+            <DeletionPolicy>RecycleBin</DeletionPolicy>
+            <VersioningFolder Style="Replace"/>
+        </SyncConfig>
+        <GlobalFilter>
+            <Include>
+                <Item>*</Item>
+            </Include>
+            <Exclude>
+                <Item>/.fseventsd/</Item>
+                <Item>/.Spotlight-V100/</Item>
+                <Item>/.Trashes/</Item>
+                <Item>*/.DS_Store</Item>
+                <Item>*/._.*</Item>
+            </Exclude>
+            <TimeSpan Type="None">0</TimeSpan>
+            <SizeMin Unit="None">0</SizeMin>
+            <SizeMax Unit="None">0</SizeMax>
+        </GlobalFilter>
+        <FolderPairs>
+            <Pair>
+                <Left>/Users/geoffreyryan/NetBeansProjects/HRMaster/public_html</Left>
+                <Right>ftp://hrmastergr%40hrmaster.com.au@hrmaster.com.au:21/|pass64=d2Z4NXk3cDg=</Right>
+            </Pair>
+        </FolderPairs>
+        <OnCompletion/>
+    </MainConfig>
+    <GuiConfig>
+        <HandleError>Popup</HandleError>
+        <MiddleGridView>Category</MiddleGridView>
+    </GuiConfig>
+</FreeFileSync>

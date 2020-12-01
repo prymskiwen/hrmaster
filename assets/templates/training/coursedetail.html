@@ -1,0 +1,639 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+
+<style>
+    #coursedetail .form-group { display: flex; flex-direction: row; margin-bottom: 10px; }
+    #coursedetail .form-group label { flex: 1; padding: 0px 20px; text-align: right;}
+    #coursedetail .form-group .field { flex: 4; }
+    #coursedetail md-radio-button .md-label{ display: flex; align-items: center; pointer-events: auto;}
+    #coursedetail md-radio-button .md-label >span{margin-right: 10px;}
+
+    #coursedetail label.question-label, #coursedetail label.media-label { flex: none; margin-right: 1rem; display: flex; align-items: center; width: 16rem; }
+    #coursedetail .question { flex: 1; }
+
+    #coursedetail label.answer-label { flex: none; margin-right: 1rem; display: flex; align-items: center; }
+    #coursedetail md-radio-group.media-type { display: flex; align-items: center; flex-direction: row; }
+    #coursedetail md-radio-group.media-type md-radio-button { margin: 0 3rem 0 0;}
+
+    #coursedetail md-radio-group.media-type md-radio-button .md-label { margin-left: 2.3rem;}
+
+    #coursedetail .question-qty-label { width: auto; flex: none !important; display: flex; align-items: center; margin:0 1rem 0 0;}
+    #coursedetail .btn { margin-right: 5px; margin-top: 1rem;}
+    .media-panel-box { flex: 1; }
+
+    #coursedetail .horizontal { display: flex; }
+    #coursedetail .horizontal md-radio-button { flex-direction: row; margin-right: 3rem; }
+    #coursedetail .horizontal md-radio-button .md-label { margin-left: 25px;}
+
+    #coursedetail .success { color: #228B22;}
+    #coursedetail .error { color: #cb132d;}
+
+    /* updated by Alex-cobra from LiYin -20-04-06 */
+    .progress{ display: block;  width: 100%; border: 3px groove #CCC; line-height: 15px; margin: 10px 0; }
+    .progress div { font-size: smaller; background: #228B22;  width: 0; }
+
+    *{box-sizing: border-box;}
+    /* .wrapper {margin: 0 auto; width: 100%; } */
+    .pdf-controls { width: 100%; display: block; background: #eee; padding: 1em;}
+    .rotate0 {-webkit-transform: rotate(0deg); transform: rotate(0deg); }
+    .rotate90 {-webkit-transform: rotate(90deg); transform: rotate(90deg); }
+    .rotate180 {-webkit-transform: rotate(180deg); transform: rotate(180deg); }
+    .rotate270 {-webkit-transform: rotate(270deg); transform: rotate(270deg); }
+    .fixed { position: fixed; top: 0; left: calc(50% - 480px); z-index: 100; width: 100%; padding: 1em; background: rgba(238, 238, 238,.9); width: 960px; }
+
+    .close {
+        font-size: 30px !important;
+        color: red !important;
+        opacity: 0.8 !important;
+    }
+    
+    .light-blue { color: #1D77D5;}
+    .mytooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .mytooltip .tooltiptext {
+      visibility: hidden;
+      max-width: 300px;
+      background-color: rgb(0, 0, 0, 0.7);
+      padding: 8px;
+      color: #fff;
+      border-radius: 6px;
+      font-family: arial, sans-serif;
+      font-size: 12px;
+      line-height: 14px;
+    
+      /* Position the tooltip */
+      position: absolute;
+      z-index: 100;
+      left: -150px;
+    }
+    .mytooltip .tooltiptext a{
+        color: #e69900;
+    }
+    .mytooltip .tooltiptext ol, .mytooltip .tooltiptext li {
+        margin: 0;
+        padding: 0;
+    }
+
+    .mytooltip .tooltiptext ol {
+        display: table;
+    }
+    
+    .mytooltip .tooltiptext ol >li {
+        list-style: none;
+        counter-increment: foo;
+        display: table-row;
+    }
+    
+    .mytooltip .tooltiptext ol >li::before {
+        content: counter(foo) ".";
+        display: table-cell;
+        text-align: right;
+        padding-right: .3em;
+    }
+    .mytooltip:hover .tooltiptext {
+      visibility: visible;
+      width: max-content;
+    }
+    @media only screen and (max-width: 600px) {
+        .mytooltip .tooltiptext{
+            max-width: 300px!important;
+        }
+    }
+    /* // // // // // */
+
+</style>
+
+<div class="container" id="coursedetail">
+    <div class="page-title-box">
+        <span class="page-title">{{pageTitle}}</span>
+    </div>
+    <div class="form">
+
+        <md-content>
+            <md-tabs md-dynamic-height="" md-border-bottom="" md-selected="selectedTab">
+
+                <!-- Main Tab -->
+                <md-tab label="Step 1">
+                    <md-content class="md-padding">
+                        <!-- Course Name -->
+                        <div class="form-group">
+                            <label class="control-label" for="course_name">Course Name:
+                                <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                    <span class="tooltiptext" ng-bind-html="info_course_name | trustHtml"></span>
+                                </i>
+                            </label>
+                            <div class="field">
+                                <input type="text" ng-model="course.course_name" name="course_name" class="form-control" id="course_name" required>
+                            </div>
+                        </div>
+
+                        <!-- Course Description -->
+                        <div class="form-group">
+                            <label class="control-label" for="course_description">Course Description:
+                                <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                    <span class="tooltiptext" ng-bind-html="info_course_description | trustHtml"></span>
+                                </i>
+                            </label>
+                            <div class="field">
+                                <textarea class="form-control" rows="5" ng-model='course.course_description' name="course_description" id="course_description" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Course Category Type -->
+                        <div class="form-group">
+                            <label class="control-label">Course Category:
+                                <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                    <span class="tooltiptext" ng-bind-html="info_course_category | trustHtml"></span>
+                                </i>
+                            </label>
+                            <div class="field">
+                                <select class="form-control" ng-model="course.course_category_id" ng-required="formEnabled == 1">
+                                    <option value="{{s.id}}" ng-repeat="s in course_category" ng-hide="s.label=='GLOBAL'">{{ s.label }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Course Type -->
+                        <div class="form-group">
+                            <label class="control-label">Course Type:
+                                <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                    <span class="tooltiptext" ng-bind-html="info_course_type | trustHtml"></span>
+                                </i>
+                            </label>
+                            <div class="field">
+                                <input type="hidden" name="course_type" value='{{course.course_type}}'>
+                                <!-- updated by Alex-cobra ng-change -20-04-03 -->
+                                <md-radio-group ng-model="course.course_type" ng-change="addAnswerStyleChange()">
+                                    <md-radio-button value="Multiple Choice" class="md-primary" >Multiple Choice</md-radio-button>
+                                    <md-radio-button value="Questions And Answers"> Questions and Answers </md-radio-button>
+                                </md-radio-group>
+                                <!-- // // // // // -->
+                            </div>
+                        </div>
+
+                        <!-- Active Course -->
+                        <div class="form-group">
+                            <label class="control-label">Active Course:
+                                <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                    <span class="tooltiptext" ng-bind-html="info_active_course | trustHtml"></span>
+                                </i>
+                            </label>
+                            <div class="field">
+                                <input type="hidden" name="status" value='{{course.status}}'>
+                                <md-radio-group ng-model="course.status" name="status" id="status">
+                                    <md-radio-button value="1" class="md-primary" >Active</md-radio-button>
+                                    <md-radio-button value="0"> Inactive </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+
+                <!-- Questions Tab -->
+                <md-tab label="Step 2">
+                    <md-content class="md-padding">
+
+                        <!-- Question Numbers -->
+                        <div class="form-group" style="margin-bottom: 3rem;" ng-hide="true">
+                            <label class="question-qty-label" for="course_name">How many questions do you want in your course?</label>
+                            <div class="question" style="min-width: 100px;">
+                                <select style="width: 8rem;" class="form-control" ng-model="course.question_count" ng-change="updateQuestionNumber()">
+                                    <option value="{{value}}" ng-value="value" ng-repeat="value in questionNumbers">{{ value }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <md-expansion-panel ng-repeat="question in course.questions" md-component-id="panelOne">
+                            <md-expansion-panel-collapsed ng-click="initQuestion()">
+                                <div class="md-title" style="max-width: 284px;">{{course.questions[question.index].name}} <small style="font-weight: normal;">(Click here to open question)</small></div>
+                            </md-expansion-panel-collapsed>
+
+                            <md-expansion-panel-expanded>
+                                <md-expansion-panel-header ng-click="$panel.collapse()">
+                                    <div class="md-title">{{question.name}}</div>
+                                </md-expansion-panel-header>
+
+                                <md-expansion-panel-content>
+
+                                    <div class="form-group">
+                                        <label class="question-label control-label">Please write your question:</label>
+                                        <div class="question">
+                                            <input type="text" class="form-control" ng-model="course.questions[question.index].title" value="{{question.index}}" ng-value="{{question.index}}">
+                                        </div>
+                                    </div>
+
+                                    <!-- Media -->
+                                    <div class="form-group">
+                                        <label class="media-label">Media:</label>
+                                        <div class="" style="padding: 7px 7px 7px 15px;">
+                                            <md-radio-group class="media-type" ng-model="course.questions[question.index].media_type">
+<!--                                                            onchange="changeMediaType(question)"-->
+
+                                                <md-radio-button value="99" class="md-primary">No media</md-radio-button>
+                                                <md-radio-button value="0" class="md-primary">Image</md-radio-button>
+                                                <md-radio-button value="1" class="md-primary">Video Clip</md-radio-button>
+                                                <md-radio-button value="3" class="md-primary">PDF</md-radio-button>
+                                            </md-radio-group>
+                                        </div>
+                                    </div>
+
+                                    <!-- updated by Alex-cobra from LiYin -20-04-06 -->
+                                    <!--//start updated by Alex-cobra-2020-04-02-->
+                                    <!-- Media Panel -->
+                                    <div class="form-group">
+                                        <div class="" style="width: 16rem;"></div>
+                                        <div class="media-panel-box">
+                                            <div ng-if="course.questions[question.index].media_type == 0" class="panel panel-default">
+                                                <div class="panel-heading">Images</div>
+                                                <div class="panel-body" ng-show="!course.questions[question.index].pdf_href && !course.questions[question.index].video_href">
+                                                    <div class="image-box">
+                                                        <a class='close remove-image-button' ng-click="removeMediaFile(question.index)" ng-show="course.questions[question.index].image_href">&times;</a>
+                                                        <img style="display: block; margin: 1rem 0; max-width: 100%; " alt="" class="image-viewer" ng-hide="!course.questions[question.index].image_href"
+                                                             src="{{course.questions[question.index].image_href}}" >
+                                                        <input type="file" onchange="angular.element(this).scope().fileNameChanged(this)" ng-show="!course.questions[question.index].image_href"
+                                                               id="imagemedia{{question.index}}" ngf-select="" class="file_multi_image" accept="image/*"
+                                                               ng-model="course.questions[question.index].image">
+                                                        <button ng-disabled="!isChangedFileName || progress.image!==0" class='upload-btn btn btn-primary' ng-show="!course.questions[question.index].image_href"
+                                                                ng-click='uploadImage(question.index)' type='button'>Upload</button>
+                                                        <div class="progress" ng-show="progress.image > 0">
+                                                            <div style="width:{{progress.image}}%" ng-bind="progress.image + '%'" class="ng-binding"></div>
+                                                        </div>
+                                                        <div style="margin-top: .5rem;" ng-bind-html="imageUploadMessage"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div ng-if="course.questions[question.index].media_type == 1" class="panel panel-default">
+                                                <div class="panel-heading">Video Clip</div>
+                                                <div class="panel-body" ng-show="!course.questions[question.index].pdf_href && !course.questions[question.index].image_href">
+                                                    <a class='close remove-image-button' ng-click="removeMediaFile(question.index)" ng-show="course.questions[question.index].video_href">&times;</a>
+                                                    <video width="100%" height="400" controls ng-hide="!course.questions[question.index].video"
+                                                           src="{{course.questions[question.index].video_href}}">
+                                                        <source src="{{course.questions[question.index].video_href}}" type="video/mp4">
+                                                        <source src="{{course.questions[question.index].video_href.split('.mp4')[0]}}.webm" type="video/webm">
+                                                        <source src="{{course.questions[question.index].video_href.split('.mp4')[0]}}.ogv" type="video/ogg">
+                                                    </video>
+                                                    <input type="file" onchange="angular.element(this).scope().fileNameChanged(this)" ng-show="!course.questions[question.index].video_href && !course.questions[question.index].pdf_href && !course.questions[question.index].image_href"
+                                                           id="videomedia{{question.index}}" ngf-select="" class="file_multi_video" accept=".mp4"
+                                                           ng-model="course.questions[question.index].video">
+                                                    <button ng-disabled="!isChangedFileName ||progress.video!==0" class='upload-btn btn btn-primary' ng-show="!course.questions[question.index].video_href && !course.questions[question.index].pdf_href && !course.questions[question.index].image_href"
+                                                            ng-click='uploadVideo(question.index)' type='button'>Upload</button>
+                                                    <div class="progress" ng-show="progress.video > 0">
+                                                        <div style="width:{{progress.video}}%" ng-bind="progress.video + '%'" class="ng-binding"></div>
+                                                    </div>
+                                                    <div style="margin-top: .5rem;" ng-bind-html="videoUploadMessage"></div>
+                                                </div>
+                                            </div>
+
+                                            <div ng-if="course.questions[question.index].media_type == 3" class="panel panel-default">
+                                                <div class="panel-heading">PDF</div>
+                                                <div class="panel-body" ng-show="!course.questions[question.index].video_href && !course.questions[question.index].image_href">
+                                                    <a class='close remove-image-button' ng-click="removeMediaFile(question.index)" ng-show="course.questions[question.index].pdf_href">&times;</a>
+                                                    <iframe src="{{getPdfSrc(course.questions[question.index].pdf_href)}}" ng-show="course.questions[question.index].pdf_href"
+                                                            style="width: 100%; height: 320px;"></iframe>
+
+                                                    <input type="file" onchange="angular.element(this).scope().fileNameChanged(this)" ng-show="!course.questions[question.index].pdf_href"
+                                                           id="pdfmedia{{question.index}}" class="file_multi_ppt" ngf-select ngf-accept="'.pdf'"
+                                                           ng-model="course.questions[question.index].pdf">
+                                                    <button ng-disabled="!isChangedFileName ||progress.pdf!==0" class='upload-btn btn btn-primary' ng-show="!course.questions[question.index].pdf_href"
+                                                            ng-click='uploadPdf(question.index)' type='button'>Upload</button>
+                                                    <div class="progress" ng-show="progress.pdf > 0">
+                                                        <div style="width:{{progress.pdf}}%" ng-bind="progress.pdf + '%'" class="ng-binding"></div>
+                                                    </div>
+                                                    <div style="margin-top: .5rem;" ng-bind-html="pdfUploadMessage"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--//end updated by Alex-cobra-2020-04-02-->
+                                    <!-- // // // // // -->
+
+                                    <!-- Answer Count -->
+                                    <div class="form-group" ng-hide="true">
+                                        <label class="answer-label control-label">How many answer options do you want?:</label>
+                                        <div class="">
+                                            <select class="form-control" ng-model="course.questions[question.index].answer_count" ng-change="updateAnswerNumber(question.index)" style="width: 130px;">
+                                                <option ng-value="{{value}}" value="{{value}}" ng-repeat="value in answerNumbers">{{value}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- updated by Alex-cobra -20-04-03 -->
+                                    <div ng-style="course.addAnswerDivStyle">
+                                        <div class="form-group" >
+                                            <label style="width:16rem; flex: none;"></label>
+                                            <div style="margin-bottom: 1rem;">
+                                                <button class="btn btn-primary" ng-click="addAnswer(question.index)">Add Answer</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- updated by Alex-cobra -20-04-03 -->
+                                        <!-- Answer Input -->
+                                        <div style="padding-left: 80px; padding-right: 80px;">
+                                            <md-radio-group ng-model="course.questions[question.index].correct_answer_index">
+                                                <div ng-repeat="answer in course.questions[question.index].answers" class="form-group">
+                                                    <div style="margin: auto; width: 70%;">
+                                                        <md-radio-button value="{{answer.index}}"
+                                                                         class="md-primary"
+                                                                         style="display:inline-block; margin-top: 7px;">
+                                                        </md-radio-button>
+                                                        <input type="text"
+                                                               class="form-control"
+                                                               ng-model="answer.title"
+                                                               ng-readonly="answer.index==course.questions[question.index].correct_answer_index"
+                                                               style="display: inline-block; width: 90%; float: right;">
+                                                    </div>
+                                                </div>
+                                            </md-radio-group>
+                                        </div>
+                                        <!-- // // // // // -->
+                                    </div>
+                                </md-expansion-panel-content>
+                            </md-expansion-panel-expanded>
+                        </md-expansion-panel>
+
+                        <div class="form-group">
+                            <div style="margin-top: 1rem;">
+                                <button class="btn btn-primary" ng-click="addQuestion()">Add Question</button>
+                            </div>
+                        </div>
+
+                    </md-content>
+                </md-tab>
+
+                <!-- Settings Tab -->
+                <md-tab label="Step 3">
+                    <md-content class="md-padding">
+                        <!-- Time Limit -->
+                        <div class="form-group">
+                            <input type="hidden" name="time_limit" value='{{course.time_limit}}'>
+                            <label class="control-label col-sm-8">Do you want a time limit on for each of these questions when displayed?</label>
+                            <div class="col-sm-4">
+                                <md-radio-group ng-model="course.time_limit" name="time_limit" ng-change="onTimeoutChanged()">
+                                    <md-radio-button value="15">Yes 15 seconds
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_timelimit_15 | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                    <md-radio-button value="60">
+                                        Yes 1 minute
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_timelimit_60 | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                    <md-radio-button value="300">
+                                        Yes 5 minutes
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_timelimit_300 | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                    <md-radio-button value="600">
+                                        Yes 10 minutes
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_timelimit_600 | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                    <md-radio-button value="0">
+                                        No
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_timelimit | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+
+                        <!--//start updated by Alex-cobra-2020-04-02-->
+                        <!-- Is Randomised -->
+                        <div class="form-group">
+                            <input type="hidden" name="is_randomized" value='{{course.is_randomized}}'>
+                            <label class="control-label col-sm-8">Do you want page numbers to be displayed with the questions?</label>
+                            <div class="col-sm-4">
+                                <md-radio-group ng-model="course.is_randomized" name="is_randomized" id="is_randomized" class="horizontal">
+                                    <md-radio-button value="1">Yes</md-radio-button>
+                                    <md-radio-button value="0">
+                                        No
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_is_randomized | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+                        <!--//end updated by Alex-cobra-2020-04-02-->
+
+                        <!--//start updated by Alex-cobra-2020-04-17-->
+                        <!-- Is Locked -->
+                        <div class="form-group">
+                            <input type="hidden" name="is_locked" value='{{course.is_locked}}'>
+                            <label class="control-label col-sm-8">Do you want this course to expire and lock out the user at its due date?</label>
+                            <div class="col-sm-4">
+                                <md-radio-group ng-model="course.is_locked" name="is_locked" id="is_locked"  class="horizontal">
+                                    <md-radio-button value="1">Yes</md-radio-button>
+                                    <md-radio-button value="0">
+                                        No
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_is_locked | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+                        <!--//end updated by Alex-cobra-2020-04-17-->
+
+                        <!-- updated by Alex-cobra -20-04-03 -->
+                        <div ng-style="course.addAnswerDivStyle">
+                            <!-- Display Error Message -->
+                            <div class="form-group">
+                                <input type="hidden" name="display_error_message" value='{{course.display_error_message}}'>
+                                <label class="control-label col-sm-8">Do you want error messages to display in they get a question right or wrong?</label>
+                                <div class="col-sm-4">
+                                    <md-radio-group ng-model="course.display_error_message" name="display_error_message" id="display_error_message" class="horizontal" ng-change="onDisplayErrorMessageOptionChanged()">
+                                        <md-radio-button value="1">Yes</md-radio-button>
+                                        <md-radio-button value="0">
+                                            No
+                                            <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                                <span class="tooltiptext" ng-bind-html="options_display_error_message | trustHtml"></span>
+                                            </i>
+                                        </md-radio-button>
+                                    </md-radio-group>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- // // // // // -->
+
+                        <!-- Re-Order -->
+                        <div class="form-group">
+                            <input type="hidden" name="reorder" value='{{course.reorder}}'>
+                            <label class="control-label col-sm-8">Do you want the right and wrong answers to be re-ordered each test?</label>
+                            <div class="col-sm-4">
+                                <md-radio-group ng-model="course.reorder" name="reorder" id="reorder" class="horizontal" ng-change="onReorderOptionChanged()">
+                                    <md-radio-button value="1">Yes</md-radio-button>
+                                    <md-radio-button value="0">
+                                        No
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_reorder | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+
+                        <!-- updated by Alex-cobra -20-04-03 -->
+                        <div ng-style="course.addAnswerDivStyle">
+                            <!-- Correct answer only -->
+                            <div class="form-group">
+                                <input type="hidden" name="reorder" value='{{course.correct_only}}'>
+                                <label class="control-label col-sm-8">Accept correct answers only?</label>
+                                <div class="col-sm-4">
+                                    <md-radio-group ng-model="course.correct_only" class="horizontal" ng-change="onCorrectOnlyOptionChanged()">
+                                        <md-radio-button value="1" ng-disabled="course.time_limit > 0">Yes</md-radio-button>
+                                        <md-radio-button value="0" ng-disabled="course.time_limit > 0">
+                                            No
+                                            <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                                <span class="tooltiptext" ng-bind-html="options_correct_only | trustHtml"></span>
+                                            </i>
+                                        </md-radio-button>
+                                    </md-radio-group>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- // // // // // -->
+
+                        <!-- Comeback -->
+                        <div class="form-group">
+                            <input type="hidden" name="is_comeback" value='{{course.is_comeback}}'>
+                            <label class="control-label col-sm-8">Do you want the user to be able to leave the course and come back to complete it at a later time within the time period?</label>
+                            <div class="col-sm-4">
+                                <md-radio-group ng-model="course.is_comeback" name="is_comeback" id="is_comeback" class="horizontal">
+                                    <md-radio-button value="1">Yes</md-radio-button>
+                                    <md-radio-button value="0">
+                                        No
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_is_comeback | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+
+                        <!-- updated by Alex-cobra -20-04-03 -->
+                        <div ng-style="course.addAnswerDivStyle">
+                            <!-- Try Again -->
+                            <div class="form-group">
+                                <input type="hidden" name="try_again" value='{{course.try_again}}'>
+                                <label class="control-label col-sm-8">Do you want the user to be able to "try a question again" if they get it wrong or just move to the next?</label>
+                                <div class="col-sm-4">
+                                    <md-radio-group ng-model="course.try_again" name="try_again" id="try_again" class="horizontal">
+                                        <md-radio-button value="1">Yes</md-radio-button>
+                                        <md-radio-button value="0">
+                                            No
+                                            <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                                <span class="tooltiptext" ng-bind-html="options_try_again | trustHtml"></span>
+                                            </i>
+                                        </md-radio-button>
+                                    </md-radio-group>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- // // // // // -->
+
+                        <!-- Global -->
+                        <div class="form-group" ng-show="isAdmin == true">
+                            <input type="hidden" name="is_global" value='{{course.is_global}}'>
+                            <label class="control-label col-sm-8">Do you want to make this course GLOBAL?</label>
+                            <div class="col-sm-4">
+                                <md-radio-group ng-model="course.is_global" name="is_global" id="is_global" class="horizontal">
+                                    <md-radio-button value="1">Yes</md-radio-button>
+                                    <md-radio-button value="0">No</md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+
+                        <!-- Auto Inactive time -->
+                        <div class="form-group">
+                            <input type="hidden" name="is_auto_inactive" value='{{course.is_auto_inactive}}'>
+                            <input type="hidden" name="auto_inactive_time" value='{{course.auto_inactive_time}}'>
+                            <label class="control-label col-sm-8">Do you want this course to automatically become inactive on a certain date?</label>
+                            <div class="col-sm-4">
+                                <md-radio-group ng-model="course.is_auto_inactive" name="is_auto_inactive" id="is_auto_inactive" class="horizontal">
+                                    <md-radio-button value="1">Yes</md-radio-button>
+
+                                    <md-radio-button value="0">
+                                        No
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_is_inactive | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                </md-radio-group>
+                                <div ng-show="course.is_auto_inactive == 1">
+                                    <input type="date" ng-model = 'auto_inactive_time ' name="auto_inactive_time " class="form-control" id="auto_inactive_time ">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Go Back -->
+                        <div class="form-group">
+                            <input type="hidden" name="go_back" value='{{course.go_back}}'>
+                            <label class="control-label col-sm-8">Do you want to allow the user to go back and adjust previous questions?</label>
+                            <div class="col-sm-4">
+                                <md-radio-group ng-model="course.go_back" name="go_back" id="go_back" class="horizontal" ng-change="onGoBackOptionChanged()">
+                                    <md-radio-button value="1">Yes</md-radio-button>
+                                    <md-radio-button value="0">
+                                        No
+                                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                                            <span class="tooltiptext" ng-bind-html="options_go_back | trustHtml"></span>
+                                        </i>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+
+    </div>
+
+    <div style="color: #0A0; font-size: 1.2em; text-align: center;">
+        {{course_save_message}}
+    </div>
+
+    <div class="form-group" style="float: right; padding: 20px;">
+        <button class="btn btn-primary" type="button" ng-click="nextTab()" ng-show="showSave == 0">Next</button>
+        <button class="btn btn-primary" type="button" ng-click="submitInProgress = 1; saveCourse();" ng-disabled="submitInProgress == 1" ng-show="showSave == 1">Save</button>
+        <button class="btn btn-info" ng-click="cancel()" ng-disabled="formEnabled == 0">Cancel</button>
+    </div>
+
+    <!-- updated by Alex-cobra -20-04-16 -->
+    <div modal="showModal" close="cancel_remove()" style="background-color: white; width: 350px; height: 256px; margin: auto;">
+      <div class="modal-header">
+          <h4>Are you sure you want to delete the media file?</h4>
+      </div>
+      <div class="modal-body">
+          <p>This action will remove it from your course and you will not be able to recover it. Select "Yes" to Continue.</p>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-danger" ng-click="removeFiles()">Yes</button>
+          <button class="btn" ng-click="cancel_remove()">No</button>
+      </div>
+    </div>
+    <!-- // // // // // -->
+    <!-- updated by Alex-cobra -20-04-16 -->
+    <div modal="showErrorModal" close="cancel_error()" style="background-color: white; width: 350px; height: 250px; margin: auto;">
+      <div class="modal-header">
+          <h4>Error</h4>
+      </div>
+      <div class="modal-body">
+          <p>This media content can not be deleted because it has already been allocated to a user who has commenced the course.</p>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-danger" ng-click="cancel_error()">Cancel</button>
+      </div>
+    </div>
+    <!-- // // // // // -->
+
+</div>

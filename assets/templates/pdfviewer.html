@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="app" ng-controller="PdfCtrl">
+  <head>
+    <title>HR Master</title>
+    <meta charset="utf-8">
+    <!--<base href="/">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
+
+    <meta http-equiv="EXPIRES" content="Mon, 22 Jul 2002 11:12:01 GMT" />
+    <meta http-equiv="Last-Modified" content="Sun, 06 Nov 2005 14:59:42 GMT">
+    <META http-equiv="CACHE-CONTROL" content="no-cache, must-revalidate" />
+    <meta http-equiv="PRAGMA" content="NO-CACHE">
+
+    <script src="../../assets/js/pdfviewer/node_modules/angular-pdfjs-viewer/bower_components/pdf.js-viewer/pdf.js"></script>
+    <link rel="stylesheet" href="../../assets/js/pdfviewer/node_modules/angular-pdfjs-viewer/bower_components/pdf.js-viewer/viewer.css">
+
+    <!-- <script src="../../assets/js/pdfviewer/node_modules/angular-pdfjs-viewer/bower_components/angular/angular.js"></script> -->
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+    
+    <script src="../../assets/js/core/angular1.5.9.min.js"></script>
+    <script src="../../assets/js/core/angular-route.min.js"></script>
+    <script src="../../assets/js/core/angular-sanitize.min.js"></script>
+    <script src="../../assets/js/core/angular-cookies.min.js"></script>
+
+    <script src="../../assets/js/pdfviewer/node_modules/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js"></script>
+
+    <script src="../../assets/js/pdfviewer/pdfviewctl.js"></script>
+
+    <style>
+      html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
+      .pdf-container { width: 100%; height: 100%; }
+    </style>
+  </head>
+
+  <body>
+    <div class="pdf-container">
+      <pdfjs-viewer src="{{ pdf.src }}" id="pdfviewer"></pdfjs-viewer>
+    </div>
+  </body>
+</html>

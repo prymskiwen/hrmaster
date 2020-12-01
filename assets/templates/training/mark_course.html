@@ -1,0 +1,96 @@
+<!-- This is created by updated by Alex-cobra on -20-04-06 -->
+
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+
+<style>
+    .course_info {
+        font-size: 14px;
+    }
+
+    .page-title-box {
+        margin-bottom: 50px;
+    }
+
+    md-radio-group.horizontal {
+        display: flex;
+    }
+
+    md-radio-group.horizontal md-radio-button {
+        flex-direction: row;
+        margin-right: 3rem;
+    }
+</style>
+
+<div class="container">
+    <div class="page-title-box">
+        <h3>{{pageTitle}} - {{ course.coursetitle }}</h3>
+    </div>
+    <div class="clear"></div>
+
+    <div id="step1" ng-show="course.step == 1">
+        <div>
+            <p class="course_info"><b>Course Title: </b>{{ course.coursetitle }}</p><br>
+            <p class="course_info"><b>Course Description: </b>{{ course.coursedescription }}</p><br>
+            <p class="course_info"><b>Course Trading Name: </b>{{ course.tradingname }}</p><br>
+            <p class="course_info"><b>Name of Learner: </b>{{ course.learnersname }}</p><br>
+            <p class="course_info"><b>Email Address of Learner: </b>{{ course.userEmailAddress }}</p><br>
+        </div>
+        
+        <div class="buttons" style="width: 120px; margin: 40px auto 0;">
+            <button class="btn btn-primary" ng-click="next()" style="margin-left: 5px;">Next</button>
+        </div>
+    </div>
+
+    <div id="step2" ng-show="course.step == 2">
+        <div class="question-list" ng-repeat="q in course.questions" ng-hide="question_id  != q.question_id">
+            <div class="question_{{q.question_id}}">
+                <div ng-show="q.media_type == 0">
+                    <img ng-hide="q.image==''" src="//hrmaster.com.au/assets/uploads/images/{{q.image}}" border="0" style="max-width: 100%;">
+                </div>
+                <div ng-show="q.media_type == '3'">
+                    <object width="100%" height="600" data="{{q.pdf}}"></object>
+                </div>    
+                <div ng-show="q.media_type == '1'">
+                    <video width="100%" height="400" controls>
+                        <source src="{{q.video}}">
+                    </video>                    
+                </div>                 
+                <div style="min-width: 250px; margin-left: 10px; margin-top: 25px;">
+                    <p class="course_info">{{ q.title }}</p>
+                    <p>
+                        <div style="margin-top: 20px;">
+                            <p><b>Answer of the Employee is: </b><br></p>
+                            <!-- answer of employee -->
+                            <p>{{q.answers[0].answer}}</p>
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 30px;">
+                <input type="hidden" name="is_correct" value='{{is_correct}}'>
+                <label class="control-label col-sm-8">Is this answer of the employee correct?</label>
+                <div class="col-sm-4">
+                    <md-radio-group ng-model="is_correct" name="is_correct" id="is_correct" class="horizontal">
+                        <md-radio-button value="1">Yes</md-radio-button>
+                        <md-radio-button value="2">No</md-radio-button>
+                    </md-radio-group>
+                </div>
+            </div>
+            
+            <div class="buttons" style="width: 250px; margin: 40px auto 20px;">
+                <button ng-click="back()" class="btn btn-default">Back</button>
+                <button class="btn btn-primary" ng-click="submitReview(q.question_id, is_correct)" style="margin-left: 5px;">Submit Review</button>
+            </div>
+            
+        </div>
+    </div>
+
+    <div id="stepcomplete" ng-show="course.step == 'complete'">
+        <p>You have completed the review.</p>
+        <div class="buttons" style="width: 190px; margin: 40px auto 20px;">
+            <button class="btn btn-primary" ng-click="CloseReview()">Close Review</button>
+        </div>        
+
+    </div>
+</div>

@@ -1,0 +1,37 @@
+/** Slider Holder ***/
+.slider-holder {
+    float: right;
+    width: 49.5rem;
+    height: 32.3rem;
+    background: url(images/slider.png) no-repeat 0 0;
+    position: absolute;
+    top: 7px;
+    right: -19px;
+    padding: 0;
+    z-index: 1000;
+    border: solid .1rem $color__border;
+
+    .flexslider {
+        width: 49.7rem;
+        height: 33.8rem;
+        position: relative;
+
+        ul.slides {
+            list-style: none;
+            list-style-position: outside;
+            position: relative;
+
+            li {
+                width: 49.7rem;
+                height: 28.8rem;
+                float: left;
+
+                img {
+                    width: 49.7rem;
+                    height: 28.8rem;
+                }
+            }
+        }
+    }
+}
+/** END: Slider holder *****/

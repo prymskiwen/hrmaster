@@ -1,0 +1,286 @@
+<style>
+    menu .nav-btn-2 { text-align: left; }
+    .non-mobile { display: block;}
+    .mobile { display: none;}
+
+    @media only screen and (max-width: 600px) {
+        .non-mobile { display: none;}
+        .mobile { display: block;}
+        .top-nav ul { width: calc(100% + 1px); position: initial; }
+        .top-nav ul li { padding-right: 5px; }
+        .top-nav ul li ul { z-index: 3000; margin-left: -21px; width: calc(100% + 28px); }
+        .top-nav ul li ul li { background: none; text-align: left; padding-left: 40px; background-color: #F0F8FF; }
+        .top-nav a.nav-btn-2 div.menu-label div:first-child { flex: 1; }
+        .top-nav a.nav-btn-2 div.menu-label div:nth-child(2) {
+            background: url(http://www.hrmaster.com.au/webroot/css/images/nav-arr@2x.png) no-repeat center 7px;
+            width: 24px;
+            height: 24px;
+            display: block;
+            z-index: 2000;
+        }
+        .top-nav ul ul li a { width: auto; }
+        
+       .menu-label { display: flex; flex-direction: row; }                
+    }
+    
+</style>
+<menu ng-show="isLoggedin" class="loggedin nav non-mobile">
+    <ul>
+        <li ng-show="perms.dashboard.read == 1"><a href="javascript:void(0)">Dashboard</a>
+            <ul>
+                <li ng-show="perms.administrator.read == 1"><a href="#administrator" target="_parent">Administrator</a></li>
+                <li ng-show="perms.manager.read == 1"><a href="#manager" target="_parent">Manager</a></li>
+                <li ng-show="perms.employer.read == 1"><a href="#employer" target="_parent">Employer</a></li>
+                <li ng-show="perms.employee.read == 1"><a href="#learner" target="_parent">Employee</a></li>
+            </ul>
+        </li>
+        <li ng-show="perms.employeeprofile.read == 1"><a href="javascript:void(0)">Profile</a>
+            <ul>
+                <li><a href="#trainingcourselist" target="_parent">Training Courses</a></li> 
+                <li ng-show="perms.viewperformancereview.read == 1"><a href="#viewperformancereview" target="_parent">View Performance Review</a></li> 
+            </ul>
+        </li>
+        <li ng-show="perms.employees.read == 1"><a href="javascript:void(0)">Employees</a>
+            <ul>
+                <li><a href="#employees" target="_parent">Employees</a></li>
+            </ul>
+        </li>
+        <li ng-show="perms.recruitment.read == 1"><a href="javascript:void(0)">Recruitment</a> 
+            <ul>
+                <li ng-show="perms.assessmentchecklist.read == 1"><a href="#assessmentchecklist" target="_parent">Assessment Checklist</a></li>
+                <li ng-show="perms.therecruiter.read == 1"><a href="#therecruiter" target="_parent">The Recruiter</a></li>
+            </ul>
+        </li>
+        <li ng-show="perms.performancemanagement.read == 1"><a href="javascript:void(0)">Performance</a> 
+            <ul>
+                <li ng-show="perms.performancereview.read == 1"><a href="#performancereview" target="_parent">Performance Review</a></li>
+                <li ng-show="perms.performancereview.read == 1"><a href="#performancereviewdashboard" target="_parent">Performance Dashboard</a></li>
+            </ul>
+        </li>
+        
+        <li ng-show="perms.training.read == 1"><a href="javascript:void(0)">Training</a>
+            <ul>
+     
+                <li ng-show="perms.trainingcourses.read == 1"><a href="#trainingcourses" target="_parent">CREATE | EDIT Course</a></li>
+                <li ng-show="perms.allocatetraining.read == 1"><a href="#alloc_course" target="_parent">Allocate Training</a></li>
+                <li ng-show="perms.training.read == 1"><a href="#train_dashboard" target="_parent">Training Dashboard</a></li>
+                <li ng-show="perms.allocatecareerprogressionplan.read == 1"><a href="#allocatecareerprogressionplan" target="_parent">Allocate Career</a></li>
+                <li ng-show="perms.eventscheduler.read == 1"><a href="#event_scheduler" target="_parent">Event Scheduler</a></li>
+                <li ng-show="perms.schedulerdashboard.read == 1"><a href="#scheduler_dashboard" target="_parent">E / Scheduler Dashboard</a></li>
+            </ul>
+        </li>
+        
+        <li ng-show="perms.worksafety.read == 1"><a href="javascript:void(0)">Work Safety</a>
+            <ul>
+                <li ng-show="perms.hazardoussubstance.read == 1"><a href="#hazardoussubstance" target="_parent">Hazardous Substances</a></li>
+                <li ng-show="perms.assetregister.read == 1"><a href="#assetregister" target="_parent">Asset Register</a></li>
+                <li ng-show="perms.injuryregister.read == 1"><a href="#injuryregister" target="_parent">Injury Register</a></li>
+                <li ng-show="perms.conductaudit.read == 1"><a href="#conductaudit" target="_parent">Conduct Audit</a></li>
+            </ul>
+        </li>        
+        <li ng-show="perms.report.read == 1"><a href="javascript:void(0)">Report</a>
+            <ul>
+                <li ng-show="perms.performancereports.read == 1"><a href="#performancereports" target="_parent">Performance Reports</a></li>
+                <li ng-show="perms.injuryreports.read == 1"><a href="#injuryreports" target="_parent">Injury Reports</a></li>
+                <li ng-show="perms.realtrainingreports.read == 1"><a href="#trainingreports" target="_parent">Training Reports</a></li>
+                <li ng-show="perms.eventreports.read == 1"><a href="#eventreports" target="_parent">Event Reports</a></li>
+            </ul>
+        </li>      
+        <li ng-show="perms.useradmin.read == 1"><a href="javascript:void(0)">Admin</a>
+            <ul>
+                <li ng-show="perms.users.read == 1"><a href="#users" target="_parent">Users</a></li>
+                <li ng-show="perms.sitedata.read == 1"><a href="#sitedata" target="_parent">Site Data</a></li>
+                <li ng-show="perms.reminders.read == 1"><a href="#reminders" target="_parent">Reminders</a></li>
+                <li ng-show="perms.systemlogs.read == 1"><a href="#systemlogs" target="_parent">System Logs</a></li>
+                <li ng-show="perms.modifypreviewform.read == 1"><a href="#modifypreviewform" target="_parent">Modify P/Review Form</a></li>
+                <li ng-show="perms.createevent.read == 1"><a href="#createevent" target="_parent">Create an Event</a></li>
+            </ul>
+        </li>
+        <li ng-show="perms.administration.read == 1"><a href="javascript:void(0)">HRM Admin</a>
+            <ul>
+                <li ng-show="perms.users.read == 1"><a href="#hrmusers" target="_parent">Users</a></li>
+                <li ng-show="perms.managedropdowns.read == 1"><a href="#managedropdowns" target="_parent">Manage Drop Downs</a></li>
+                <li ng-show="perms.managecareerplans.read == 1"><a href="#managecareerplans" target="_parent">Manage Career Plans</a></li>
+                <li ng-show="perms.reports.read == 1"><a href="#reports" target="_parent">Reports</a></li>
+                <li ng-show="perms.permissions.read == 1"><a href="#permissions" target="_parent">Permissions</a></li>
+                <li ng-show="perms.hrmsitedata.read == 1"><a href="#hrmsitedata" target="_parent">Site Data</a></li>
+                <li ng-show="perms.siteinfotexts.read == 1"><a href="#siteinfotexts" target="_parent">Site Info Texts</a></li>
+                <li ng-show="perms.auditadmin.read == 1"><a href="#auditadmin" target="_parent">Audit Manager</a></li>
+            </ul>
+        </li>
+        <li><a href="#logout">Logout</a></li>
+    </ul>
+</menu>
+
+<menu class="top-nav mobile" ng-show="isLoggedin">
+    <div class="shell">
+        <a href="javascript:void(0);" class="nav-btn" ng-init="showMenu = false;" ng-click="showMenu = !showMenu;">
+            MENU
+            <span></span>
+        </a>
+        <span class="top-nav-shadow"></span>
+        <ul class="menu-items non-mobile">
+            <li><a href="#/" target="_parent">home</a></li>
+            <li><a href="#aboutus" target="_parent">About Us</a></li>
+            <li><a href="#solution" target="_parent">solutions</a></li>
+            <li><a href="#contactus" target="_parent">contacts</a></li>
+            <li><a href="#login" target="_parent">login now</a></li>
+        </ul>
+
+        <ul ng-hide="showMenu == false"  class="menu-items mobile">
+            <li ng-show="perms.dashboard.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showDashboard = false;" ng-click="showDashboard = !showDashboard;">
+                    <div class="menu-label">
+                        <div>Dashboard</div>
+                        <div role="button" tabindex="0"></div>                           
+                    </div>                 
+                </a>
+                <ul ng-hide="showDashboard == false">
+                    <li ng-show="perms.administrator.read==1"><a href="#administrator" target="_parent">Administrator</a></li>
+                    <li ng-show="perms.manager.read==1"><a href="#manager" target="_parent">Manager</a></li>
+                    <li ng-show="perms.employer.read==1"><a href="#employer" target="_parent">Employer</a></li>
+                    <li ng-show="perms.employee.read==1"><a href="#learner" target="_parent">Employee</a></li>
+                </ul>                   
+            </li>
+            <li ng-show="perms.employeeprofile.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showProfile = false;" ng-click="showProfile = !showProfile;" >
+                    <div class="menu-label">
+                        <div>Profile</div>
+                        <div role="button" tabindex="1"></div>                            
+                    </div>
+                </a>
+                <ul ng-hide="showProfile == false;">
+                    <li><a href="#trainingcourselist" target="_parent">Training Courses</a></li> 
+                <li ng-show="perms.viewperformancereview.read == 1"><a href="#viewperformancereview" target="_parent">View Performance Review</a></li>
+                </ul>                
+            </li>
+            <li ng-show="perms.employees.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showEmployees = false;" ng-click="showEmployees = !showEmployees;">
+                    <div class="menu-label">
+                        <div>Employees</div>
+                        <div role="button" tabindex="2"></div>                            
+                    </div>
+                </a>
+                <ul ng-hide="showEmployees == false">
+                    <li><a href="#employees" target="_parent">Employees</a></li>
+                </ul>                
+            </li>
+            <li ng-show="perms.recruitment.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showRecruitment = false;" ng-click="showRecruitment = !showRecruitment;">
+                    <div class="menu-label">
+                        <div>Recruitment</div>
+                        <div role="button" tabindex="3"></div>                            
+                    </div>
+                </a>
+                <ul ng-hide="showRecruitment == false">
+                    <li ng-show="perms.assessmentchecklist.read == 1"><a href="#assessmentchecklist" target="_parent">Assessment Checklist</a></li>
+                    <li ng-show="perms.therecruiter.read == 1"><a href="#therecruiter" target="_parent">The Recruiter</a></li>
+                </ul>                
+            </li>
+            <li ng-show="perms.performancemanagement.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showPerformance = false;" ng-click="showPerformance = !showPerformance;">
+                    <div class="menu-label">
+                        <div>Performance</div>
+                        <div role="button" tabindex="4"></div>                            
+                    </div>
+                </a>
+                <ul ng-hide="showPerformance == false">
+                    <li ng-show="perms.performancereview.read == 1"><a href="#performancereview" target="_parent">Performance Review</a></li>
+                    <li ng-show="perms.performancereview.read == 1"><a href="#performancereviewdashboard" target="_parent">Performance Dashboard</a></li>
+                </ul>                
+            </li>
+            <li ng-show="perms.training.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showTraining = false;" ng-click="showTraining = !showTraining;">
+                    <div class="menu-label">
+                        <div>Training</div>
+                        <div role="button" tabindex="5"></div>                            
+                    </div>
+                </a>
+                <ul ng-hide="showTraining == false">
+                    <li ng-show="perms.trainingcourses.read == 1"><a href="#trainingcourses" target="_parent">CREATE | EDIT Course</a></li>
+                    <li ng-show="perms.allocatetraining.read == 1"><a href="#alloc_course" target="_parent">Allocate Training</a></li>
+                    <li ng-show="perms.training.read == 1"><a href="#train_dashboard" target="_parent">Training Dashboard</a></li>
+                    <li ng-show="perms.allocatecareerprogressionplan.read == 1"><a href="#allocatecareerprogressionplan" target="_parent">Allocate Career</a></li>
+                    <li ng-show="perms.eventscheduler.read == 1"><a href="#event_scheduler" target="_parent">Event Scheduler</a></li>
+                    <li ng-show="perms.schedulerdashboard.read == 1"><a href="#scheduler_dashboard" target="_parent">E / Scheduler Dashboard</a></li>
+                </ul>                
+            </li>
+        
+            <li ng-show="perms.worksafety.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showAdmin = false;" ng-click="showAdmin = !showAdmin;">
+                    <div class="menu-label">
+                        <div>Work Safety</div>
+                        <div role="button" tabindex="6"></div>
+                    </div>
+                </a>
+                <ul ng-hide="showAdmin == false">
+                    <li ng-show="perms.hazardoussubstance.read == 1"><a href="#hazardoussubstance" target="_parent">Hazardous Substances</a></li>
+                    <li ng-show="perms.assetregister.read == 1"><a href="#assetregister" target="_parent">Asset Register</a></li>
+                    <li ng-show="perms.injuryregister.read == 1"><a href="#injuryregister" target="_parent">Injury Register</a></li>
+                    <li ng-show="perms.conductaudit.read == 1"><a href="#conductaudit" target="_parent">Conduct Audit</a></li>
+                </ul>                
+            </li> 
+            
+            <li ng-show="perms.report.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showReport = false;" ng-click="showReport = !showReport;">
+                    <div class="menu-label">
+                        <div>Report</div>
+                        <div role="button" tabindex="7"></div>
+                    </div>
+                </a>
+                <ul ng-hide="showReport == false">
+                    <li ng-show="perms.performancereports.read == 1"><a href="#performancereports" target="_parent">Performance Reports</a></li>
+                    <li ng-show="perms.injuryreports.read == 1"><a href="#injuryreports" target="_parent">Injury Reports</a></li>
+                    <li ng-show="perms.realtrainingreports.read == 1"><a href="#trainingreports" target="_parent">Training Reports</a></li>
+                    <li ng-show="perms.eventreports.read == 1"><a href="#eventreports" target="_parent">Event Reports</a></li>
+                </ul>                
+            </li> 
+            
+            
+            <li ng-show="perms.useradmin.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showUserAdmin = false;" ng-click="showUserAdmin = !showUserAdmin;">
+                    <div class="menu-label">
+                        <div>Admin</div>
+                        <div role="button" tabindex="8"></div>
+                    </div>
+                </a>
+                <ul ng-hide="showUserAdmin == false">
+                    <li ng-show="perms.users.read == 1"><a href="#users" target="_parent">Users</a></li>
+                    <li ng-show="perms.sitedata.read == 1"><a href="#sitedata" target="_parent">Site Data</a></li>
+                    <li ng-show="perms.reminders.read == 1"><a href="#reminders" target="_parent">Reminders</a></li>
+                    <li ng-show="perms.systemlogs.read == 1"><a href="#systemlogs" target="_parent">System Logs</a></li>
+                    <li ng-show="perms.modifypreviewform.read == 1"><a href="#modifypreviewform" target="_parent">Modify P/Review Form</a></li>
+                    <li ng-show="perms.createevent.read == 1"><a href="#createevent" target="_parent">Create an Event</a></li>
+                </ul>                
+            </li>            
+           
+            
+            
+            <li ng-show="perms.administration.read == 1">
+                <a href="javascript:void(0);" class="nav-btn-2" ng-init="showHRMAdmin = false;" ng-click="showHRMAdmin = !showHRMAdmin;">
+                    <div class="menu-label">
+                        <div>HRM Admin</div>
+                        <div role="button" tabindex="9"></div>                            
+                    </div>
+                </a>
+                <ul ng-hide="showHRMAdmin == false">
+                    <li ng-show="perms.users.read == 1"><a href="#hrmusers" target="_parent">Users</a></li>
+                    <li ng-show="perms.managedropdowns.read == 1"><a href="#managedropdowns" target="_parent">Manage Drop Downs</a></li>
+                    <li ng-show="perms.managecareerplans.read == 1"><a href="#managecareerplans" target="_parent">Manage Career Plans</a></li>
+                    <!--<li ng-show="perms.systemlogs.read == 1"><a href="#systemlogs">System Logs</a></li>-->
+                    <li ng-show="perms.reports.read == 1"><a href="#reports" target="_parent">Reports</a></li>
+                    <!--<li ng-show="perms.reminders.read == 1"><a href="#reminders">Reminders</a></li>-->
+                    <li ng-show="perms.permissions.read == 1"><a href="#permissions" target="_parent">Permissions</a></li>
+                    <li ng-show="perms.hrmsitedata.read == 1"><a href="#hrmsitedata" target="_parent">Site Data</a></li>
+                    <li ng-show="perms.siteinfotexts.read == 1"><a href="#siteinfotexts" target="_parent">Site Info Text</a></li>
+                    <li ng-show="perms.auditadmin.read == 1"><a href="#auditadmin" target="_parent">Audit Manager</a></li>
+                </ul>                
+            </li>
+            
+            <li>
+                <a href="#logout" class="nav-btn-2">Logout</a>
+            </li>
+        </ul>
+
+    </div>
+</menu>

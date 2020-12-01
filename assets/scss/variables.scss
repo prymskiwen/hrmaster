@@ -1,0 +1,41 @@
+//// Responsive break points ////
+// --------------------------------------------------
+// @source: https://github.com/sass-mq/sass-mq
+// NOTE: breakpoints have to be px or em's. Cannot use rem's.
+$mq-breakpoints: (
+	s  : 480px,
+	sm : 600px,
+	m  : 768px,
+	ml : 900px,
+	l  : 1024px,
+	xl : 1280px,
+	xxl: 1440px,
+     mobile: 320px,
+     tablet: 740px,
+    desktop: 980px,
+       wide: 1300px
+);
+
+$from: 'min-width';
+$to: 'max-width';
+$min-device: 'min-device-width';
+$max-device: 'max-device-width';
+
+
+// DEV TOOL: Display currently active breakpoint in the browser window.
+// Comment out for production
+//$mq-show-breakpoints: map-keys($mq-breakpoints);
+
+// General
+// --------------------------------------------------
+$global__font-family            : "Tahoma,Verdana,Segoe,sans-serif";
+
+$global__body-font-size         : 1.4rem;
+$global__body-mobile-font-size  : 3.4rem;
+$global__body-line-height       : 1.5;
+
+$global__body-line-height       : 1.5;
+$global__font-weight--light		: 300;
+$global__font-weight--normal	: 400;
+$global__font-weight--semibold  : 500;
+$global__font-weight--bold		: 700;

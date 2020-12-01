@@ -1,0 +1,304 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+
+<style type="text/css">
+    h3 { font-size: 20px; color: #2d2d2d; line-height: 22px; font-family: 'Ubuntu', sans-serif; font-weight: 500; padding-bottom: 8px; }
+    .form-new { display: flex; justify-content: flex-end; margin-bottom: 5px;}
+    .ui-grid-grid-footer { display: flex; align-items: center; padding-left: 5px; border-top: solid 1px #e0e0e0; background-color: #efefef; }
+    .grid-center-cell { display: flex; justify-content: center; }  
+    
+    .actions { margin-top: 10px; display: flex; justify-content: flex-end;} 
+    
+    .option-separator { display: inline-block; margin: 0 1rem; }
+    .text-edit { color: #e6a400; }
+    .text-edit:hover { opacity: .7;}
+    .text-view { color: #2e6da9; }
+    .text-view:hover { opacity: .7;}
+    .text-print { color: #000;}
+    .text-print:hover { opacity: .7;}
+    .text-duplicate { color: #228b22; }
+    .text-duplicate:hover { opacity: .7;}
+    .text-delete { color: #ec1c24; }
+    .text-delete:hover { opacity: .7;}    
+    
+    #checklist-view { margin-bottom: 10px; min-height: 80px; border: solid 1px rgba(212,212,212,1); }
+    #checklist-view .checklist-header {display: flex; flex-direction: row; padding: 10px 0;  justify-content: center; font-size: 18px; color: #fff; background-color: #b3dce6; text-transform: uppercase; }
+    #checklist-view .checklist-header .checklist-name { display: flex; flex-direction: row; margin-left: 5px; flex: 1; align-items: center;}  
+    
+    .checklist-select { display: flex; margin-top: 10px; justify-content: center; height: 35px; }
+    .checklist-select .content { display: flex; flex-direction: row;  }
+    .checklist-select md-select { margin: 0 10px 0 0; min-width: 250px; border: solid 1px rgba(90,90,90,.1); }
+    
+    .checklist-table { width: 100%;}
+    .checklist-table td { font-size: 11px; border-right: solid 1px rgba(0,0,0,.1); height: 24px; width: 15%; }
+    .checklist-table td:first-child { width: 20%; padding-left: 5px; text-align: left; } 
+    .checklist-table td:nth-child(4) { width: max-content; padding-left: 5px; text-align: left; }
+    .checklist-table td:nth-child(5) { width: 115px; padding-left: 5px; text-align: center; }
+    .checklist-table td:nth-child(6),
+    .checklist-table td:nth-child(7) { width: 15%; padding: 0 5px; }
+    .results-checkbox { width: 30px !important; text-align: center; }
+    .results-checkbox md-checkbox { margin: 0 -5px 0 5px; }
+    .results-date { height: 24px; width: 115px !important; }
+    input.results { width: calc(100% - 5px); }
+    td.results-date md-datepicker { padding: 0; margin: 0; width: 115px; display: flex; align-items: center; flex-direction: row-reverse; }
+    td.results-date md-datepicker .md-datepicker-input { height: 24px; font-size: 11px; }
+    td.results-date .md-datepicker-input-container { width: 78px!important; height: 24px; background-color: #fff;  border-radius: 3px;} 
+    td.results-date .md-button.md-icon-button { margin: 0; padding: 0; width: auto; }
+    
+    .checklist-table .section-header { border-top: solid 1px rgba(0,0,0,.1); border-bottom: solid 1px rgba(0,0,0,.1); background-color: #f3f3f3; padding: 5px; margin: 10px 0 0; font-weight: 700; }
+    .checklist-table .section-header td { width: 100% !important; padding: 5px;  }
+    .checklist-table tbody tr { border-bottom: solid 1px rgba(0,0,0,.1); }
+    .item-detail md-select { margin: 0;}
+    
+    md-checkbox:not([disabled]).md-warn.md-checked .md-icon { color: #337ab7; }
+    
+    .checklist-results-header { margin-top: 2rem; font-size: 2.4rem; text-transform: uppercase; text-align: center;}
+    .checklist-editing-message { font-size: 1.4rem; text-transform: none; }
+    small { font-size: .75em; opacity: .6; }
+    
+    .flex-body { display: flex;  margin-top: 10px; }
+    .flex-block { flex: 1; max-width: 100%; flex-direction: column; border: solid .1rem rgba(0,0,0,.1); padding: 15px; }
+    .fieldset { display: flex; flex-direction: column; margin-bottom: 10px;}
+    .label { padding: 5px 0; text-align: left; color: #212121; vertical-align: middle; font-size: 14px; font-weight: 400;}
+    textarea { width: 100%; height: 130px; padding: 5px 10px; border: 1px solid rgba(0,0,0,.2); }
+    .fieldset md-select { margin: 0; padding-left: 5px; height: 36px; background-color: #fff; border: solid 1px rgba(0,0,0,.2); border-radius: 3px;}
+    
+    .fieldset md-datepicker .md-datepicker-input-container { width: calc(100% - 76px); background-color: #fff; border: solid .1rem rgba(0,0,0,.2); border-radius: 3px; padding-bottom: 0; padding-top: 4px;}
+    .fieldset md-datepicker .md-datepicker-input {  }
+    .fieldset md-datepicker { margin-left: -24px; }
+    .md-datepicker-triangle-button.md-button.md-icon-button  { margin-top: 5px; }
+    .fieldset md-select .md-select-value { border-bottom: none; }
+    
+   
+    
+    .loading-wrapper { display: flex; justify-content: center; align-items: center; margin-top: 40px; font-size: 18px; }
+    .print-message { text-align: center; margin: 20px 0 10px; }     
+    
+    .form-action-bar { display: flex; flex-direction: column; margin: 1rem 0; padding: 15px;  }  
+    .form-action-bar .buttons { display: flex; align-self: center; }
+    .form-action-bar .buttons button:last-child { margin-left: 5px; }
+</style>
+
+
+<div id="auditadmin" class="container">    
+    <h3 ng-show="pageError != 1">{{ pageheader }}</h3>
+    <div class="form-new">
+        <button type="button" class="btn btn-primary" ng-click="newAudit();" >New Audit</button>
+    </div>
+    <div class="grid auditadmin-grid" external-scopes="clickHandler" ui-grid="gridOptionsComplex" ui-grid-edit ui-grid-resize-columns ui.grid.selection></div>
+     
+    <div class="checklist-select" ng-hide="newAuditAction == 0">
+        <div class="content fielset">
+            <md-select ng-model="audit.checklist_id" aria-label="Audit Checklist" placeholder="Select checklist.." ng-disabled="false">
+               <md-option ng-value="0">Select checklist..</md-option>
+               <md-option ng-value="{{ c.id }}" ng-repeat="c in cl.checklists">{{ c.name }} ({{ c.checklistType }})</md-option>
+           </md-select>                       
+        
+            <div class="buttons">
+                <button type="button" class="btn btn-primary" ng-click="confirmSelectedAudit();" ng-disabled="audit.checklist_id == '0'">Confirm</button>
+            </div>
+        </div>
+    </div>      
+    
+    
+    <div class="print-message" ng-hide="showPrintChecklistMessage == 0" ng-bind-html="printChecklistUrl"></div>
+
+    <div class="loading-wrapper" ng-hide="showPrintChecklistMessage != 2">
+        <div class="loading"></div>
+        Creating printable checklist - please wait..
+    </div>      
+    
+    <div class="loading-wrapper" ng-hide="showchecklistLoading == 0">
+        <div class="loading"></div>
+        Loading checklist - please wait..
+    </div>  
+    
+    <div class="checklist-results-header" ng-show="showchecklist == 1">
+        
+        <div class="hide-menu" ng-hide="true">
+            <span>Hide menu</span>
+            <md-checkbox style="margin: 0 -8px 4px 4px;"
+                        ng-model="showMenu"
+                        aria-label="show menu"
+                        ng-true-value="1"
+                        ng-false-value="0"
+                        ng-change="toggleMenu()"
+                        class="md-warn md-align-top-left">
+            </md-checkbox>           
+        </div>
+        
+        
+        {{ checklistName }}
+        <div class="checklist-editing-message">
+            Enter results for the audit <br /><small>(NOTE: Results are saved automatically)</small>
+        </div>        
+    </div>
+    
+    <div class="actions results" ng-show="showchecklist == 1" >
+        <div class="printAction text-print" ng-click="printChecklist();" ng-hide="true">
+            <span class="glyphicon glyphicon-print"></span>
+            Print
+        </div>
+        <div class="action-divider" ng-hide="true">:</div>
+        <div class="close-checklist text-print" ng-click="showchecklist = 0">
+            <span class="glyphicon glyphicon-remove"></span>
+            Close
+        </div>
+    </div>
+    <div id="checklist-view" ng-show="showchecklist == 1">
+        
+        <div class="checklist-header">
+            <div class="checklist-name">
+                {{ checklistdetail.ChecklistName }}
+            </div>  
+        </div>
+        
+        <table class="checklist-table">
+            <thead>
+                <tr>
+                    <th>Do you have?</th>
+                    <th>Yes</th>
+                    <th>No</th>
+                    <th>Corrective action</th>
+                    <th>Proposed<br />completion date</th>
+                    <th>Allocated to</th>
+                    <th>Completed by</th>
+                    <th>Date<br />Completed</th>
+                </tr>
+            </thead>
+            
+            <tbody ng-repeat="c in checkList">
+                    <tr class="section-header" ng-hide="c.subitems.length == 0">
+                        <td colspan="8">{{c.Name}}</td>
+                    </tr>
+                    <tr class="item-detail" ng-repeat="item in c.subitems">
+                        <td>{{item.Name}}</td>
+                        <td class="results-checkbox">                    
+                            <md-checkbox
+                                ng-disabled="viewOnly == 1"
+                                ng-model="chk[item.id].yes"
+                                aria-label="Yes"
+                                ng-true-value="1"
+                                ng-false-value="0"
+                                ng-change="setCheckbox(item,1, true)"
+                                class="md-warn md-align-top-left" flex>
+                            </md-checkbox>
+                        </td>
+                        <td class="results-checkbox">
+                            <md-checkbox
+                                ng-model="chk[item.id].no"
+                                ng-disabled="viewOnly == 1"
+                                aria-label="No"
+                                ng-true-value="1"
+                                ng-false-value="0"
+                                ng-change="setCheckbox(item,0, true)"
+                                class="md-warn md-align-top-left" flex>
+                            </md-checkbox>
+                        </td>
+                        <td>
+                            <input class="results" ng-disabled="viewOnly == 1" type="text" placeholder="Enter corrective actions.." ng-model="chk[item.id].needs" ng-blur="saveItem(item,'needs')">
+                        </td>
+                        <td class="results-date">
+                            <md-datepicker ng-model="chk[item.id].proposed_completion_date" 
+                                    md-placeholder="Enter date"
+                                    ng-disabled="viewOnly == 1"
+                                    ng-change="saveItem(item, 'proposed_completion_date')"
+                                    md-open-on-focus>                                       
+                            </md-datepicker>
+                        </td>
+                        <td>
+                            <md-select ng-disabled="viewOnly == 1" 
+                                       ng-model="chk[item.id].allocated_to" 
+                                       placeholder="Please select.." 
+                                       aria-label="Allocated to" 
+                                       ng-init="chk[item.id].allocated_to = item.allocated_to" 
+                                       ng-blur="saveItem(item, 'allocated_to')">
+                                <md-option ng-repeat="emp in employeeList" ng-value="emp.id">{{ emp.name }}</md-option>
+                            </md-select>
+                        </td>
+                        <td>
+                            <md-select ng-disabled="viewOnly == 1"
+                                       ng-model="chk[item.id].completed_by" 
+                                       placeholder="Please select.." 
+                                       aria-label="Completed by" 
+                                       ng-init="chk[item.id].completed_by = item.completed_by" 
+                                       ng-blur="saveItem(item, 'completed_by')">
+                                <md-option ng-repeat="emp in employeeList" ng-value="emp.id">{{ emp.name }}</md-option>
+                            </md-select>
+                        </td>
+                        <td class="results-date">
+                            <md-datepicker ng-model="chk[item.id].date_of_completion" 
+                                    md-placeholder="Enter date"
+                                    ng-disabled="viewOnly == 1"
+                                    ng-change="saveItem(item, 'date_of_completion')"
+                                    md-open-on-focus>                                       
+                            </md-datepicker>
+                        </td>
+                    </tr>        
+            </tbody>            
+        
+        </table>
+        
+        <div class="checklist-action-extra">
+            <div class="flex-body">
+
+                <div class="flex-block">
+                    
+                    <div class="fieldset">
+                        <div class="label">Other issues<span class="required-star"></span></div>
+                        <div class="field">
+                            <textarea ng-disabled="viewOnly == 1" ng-model="action.other_issues" placeholder="Enter details of any other issues.."></textarea>
+                        </div>
+                    </div>         
+                    
+                    <div class="fieldset">
+                        <div class="label">Completed<span class="required-star"></span></div>
+                        <div class="field">    
+                            <md-select ng-model="action.complete" aria-label="Employee" ng-init="action.complete = '0'" ng-disabled="viewOnly == 1">
+                                <md-option ng-value="0">No, not complete</md-option>
+                                <md-option ng-value="1">Yes, complete</md-option>
+                            </md-select> 
+                        </div>
+                    </div>                        
+                                        
+                    <div class="fieldset">
+                        <div class="label">Completed by<span class="required-star"></span></div>
+                        <div class="field">    
+                            <md-select ng-disabled="viewOnly == 1"
+                                       ng-model="action.completed_by_id" 
+                                       placeholder="Please select.." 
+                                       aria-label="Employee" 
+                                       ng-init="action.completed_by_id = ''">
+                                <md-option ng-repeat="e in employeeList" ng-value="e.id">
+                                    {{e.name }}
+                                </md-option>
+                            </md-select> 
+                        </div>
+                    </div>
+
+                    <div class="fieldset" style="display: flex; flex-direction: column;">
+                        <div class="label">Next audit date<span class="required-star"></span></div>
+                        <div class="field">
+                            <md-datepicker style="display: flex; flex-direction: row-reverse;" ng-disabled="viewOnly == 1" ng-model="action.next_audit_date" md-placeholder="Next audit date" md-open-on-focus></md-datepicker>
+                        </div>
+                    </div>                
+
+                </div>            
+
+            </div>
+
+            <div class="form-action-bar">      
+                <div class="user-message" ng-class="formHasErrors ? 'error-message' : 'success-message'">{{ userMessage }}</div>
+                <div class="buttons">
+                    <button class="btn btn-primary" type="button" ng-click="saveActionChecklist();" ng-hide="viewOnly == 1">Save</button>
+                    <button type="button" class="btn btn-default" ng-click="showchecklist = 0">Close</button>
+                </div>
+            </div>                 
+            
+        </div>
+        
+        
+        
+    </div>
+        
+        
+</div>

@@ -1,0 +1,111 @@
+<style>
+    md-tabs.md-default-theme md-ink-bar,
+    md-tabs md-ink-bar {
+        color: transparent;
+        background: none;
+    }
+</style>
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+
+<div class="container" id="users">
+    <h3>{{pageTitle}}</h3>
+
+    <button class="new-emp btn btn-primary" ng-click="newEvent()">New Event</button>
+    <div class="clear"></div>
+    <div class="grid user-grid" external-scopes="clickHandler" ui-grid="gridOptionsComplex" ui-grid-edit ui-grid-resize-columns
+        ui.grid.selection></div>
+    <form name="eventform" ng-class="{'disabled': formEnabled == 0}">
+        <md-content>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="event detail">
+                    <md-content class="md-padding">
+                        <div id="tab1" class="tab-pane fade in active">
+                            <fieldset ng-disabled="formEnabled == 0">
+                                <div class="col-md-12 tabborder">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="hidden" ng-model="event.id">
+                                            <input type="hidden" ng-model="event.created_by">
+                                            <input type="hidden" ng-model="event.updated_by">
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="event_name">Event Name</label>
+                                                <div class="col-sm-8">
+                                                    <select class="form-control" ng-model="event.event_name" ng-required="formEnabled == 1">
+                                                        <option value="">Please select..</option>
+                                                        <option value="{{p.display_text}}" ng-repeat="p in license_name_list">{{p.display_text }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="state">Event Description</label>
+                                                <div class="col-sm-8">
+                                                    <textarea class="form-control" ng-model="event.event_desc" placeholder="" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="event_type">Type, Class, or Condition</label>
+                                                <div class="col-sm-8">
+                                                    <select ng-model="event.event_type" ng-required="formEnabled == 1" style="width: 100%">
+                                                        <option value="">Please select..</option>
+                                                        <option ng-repeat="e in eventtypes" ng-selected="event.event_type == e.id" value="{{e.id}}">{{e.display_text}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <emp-field fld-label="Venue Name" ng-model="event.venue_name" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Address 1" ng-model="event.address1" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Address 2" ng-model="event.address2"></emp-field>
+                                            <emp-field fld-label="Suburb" ng-model="event.suburb" ng-required="formEnabled == 1"></emp-field>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="state">State</label>
+                                                <div class="col-sm-8">
+                                                    <select ng-model="event.state" ng-required="formEnabled == 1" style="width: 100%">
+                                                        <option value="">Please select..</option>
+                                                        <option ng-repeat="s in states" ng-selected="event.state == s.id" value="{{s.id}}">{{s.display_text}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <emp-field fld-label="Postcode" ng-model="event.postcode" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Trainers First Name" ng-model="event.trainer_firstname" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Trainers Surname" ng-model="event.trainer_surname" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Trainers Company" ng-model="event.trainer_company" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="RTO Number" ng-model="event.rto_number" ng-required="formEnabled == 1"></emp-field>
+                                            <emp-field fld-label="Trainer Email" ng-model="event.trainer_email" ng-required="formEnabled == 1"></emp-field>
+                                            <div class="form-group row">
+                                                <label class="control-label col-sm-4" for="empw_cost">Cost</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group" style="float:none"> 
+                                                        <span class="input-group-addon">$</span>
+                                                        <input type="text" ng-model="event.course_cost" class="form-control" ng-disabled="formEnabled == false" style="padding-right:13px;" format="currency">
+                                                    </div> 
+                                                    <span id="cost_error" style="display:none;" class="text-danger">Select
+                                                        Cost</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="eventMessage">&nbsp;
+                                        <div id="log_er_msg"></div>
+                                        <div id="login_error" class="col-xs-12" ng-show="showMessage == 1">
+                                            <div class="alert {{ success == 1 ? 'alert-success' : 'alert-danger'}} alert-dismissable">
+                                                <i class="fa fa-ban"></i>
+                                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                                {{ eventMessage }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+        <div class="buttons">
+            <button ng-click="saveEvent()" value="Save" class="btn btn-primary" ng-class="{'disabled': event_form.$invalid }" ng-disabled="event_form.$invalid">Submit</button>
+            <button class="btn btn-info" ng-click="clearForm()" ng-disabled="formEnabled == 0" style="margin-left: 5px;">Clear</button>
+        </div>
+    </form>
+
+</div>

@@ -1,0 +1,84 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+<link rel="stylesheet" href="assets/css/mobiscroll.angularjs.min.css">
+<style>
+    .ListItems, ListItems:hover {color: darkgray;margin-top: 2.5px !important;}
+    a, a:hover {text-decoration: none;display: block;padding: 20px,80px;margin: 0px;}
+    .md-view-update-demo {position: absolute;height: 100%;}
+    .md-view-update-demo .mbsc-row {height: 100%;}
+    .md-view-update-demo .md-col-right {overflow: auto;height: 100%;border-left: 1px solid #ccc;}
+    .md-view-update-popup {max-width: 400px;}
+    .md-hidden .mbsc-color-input {display: none;}
+    .md-view-update-demo .md-edit-btn {margin: 0;position: absolute;right: 10px;top: 8px;z-index: 1;transition: background-color .3s ease-out;}
+    .mbsc-material .md-view-update-demo .md-edit-btn {top: 6px;}
+    .mbsc-windows .md-view-update-demo .md-edit-btn {top: 10px;}
+    .md-view-update-demo .md-edit-btn.mbsc-btn-outline.mbsc-btn:not(:disabled):not(.mbsc-active):hover:hover {background: #3f97f6;color: #fff;}
+    .mbsc-rtl .md-view-update-demo .md-edit-btn {right: auto;left: 10px;}
+    .md-view-update-demo .md-col-right{height: auto;border: 1px solid #ccc;}
+    .md-view-update-demo .mbsc-col-md-4.mbsc-col-12{border: 1px solid #ccc;}
+    .selected{color: #23527c;}
+}
+</style>
+<div class="container" id="users" ng-init="init()">
+    <h3>{{pageTitle}}</h3>
+    <div class="row">
+        <div class="col-md-3">
+            <div ng-show="isEmployeeListExist">
+                <div class="grid-employees" external-scopes="clickHandler" ui-grid="gridOptionsComplexEply" ng-style="{height: employees_length+'px'}"></div> 
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div mbsc-page class="demo-view-update-event">
+                <div mobiscroll-form>
+                    <div class="mbsc-grid md-view-update-demo">
+                        <div class="mbsc-row mbsc-no-padding">
+                            <div class="mbsc-col-md-4 mbsc-col-12">
+                                <div mobiscroll-data="events" mobiscroll-eventcalendar="calSettings" mobiscroll-instance="calInst"></div>
+                            </div>
+                            <div class="mbsc-col-md-8 mbsc-col-12 md-col-right">
+                                <div mobiscroll-data="events" mobiscroll-eventcalendar="listSettings" mobiscroll-instance="listInst"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-model="popup" mobiscroll-popup="popupSettings" mobiscroll-instance="popupInst" class="md-view-update-popup">
+                    <div mobiscroll-form>
+                        <div class="mbsc-form-group">
+                            <label>
+                                Title
+                                <input ng-model="eventText">
+                            </label>
+                            <label>
+                                Description
+                                <textarea ng-model="eventDesc"></textarea>
+                            </label>
+                        </div>
+                        <div class="mbsc-form-group">
+                            <label for="allDay">
+                                All-day
+                                <input mobiscroll-switch ng-model="allDay" type="checkbox" ng-change="change()">
+                            </label>
+                            <label for="startInput">
+                                Starts
+                                <input id="startInput">
+                            </label>
+                            <label>
+                                Ends
+                                <input id="endInput">
+                            </label>
+                            <div ng-model="eventDate" mobiscroll-range="rangeSettings" mobiscroll-instance="range"></div>
+                            <label>
+                                Show as busy
+                                <input type="radio" data-role="segmented" name="isFree" ng-model="isFree" ng-checked="isFree == 'false'" value="false">
+                            </label>
+                            <label>
+                                Show as free
+                                <input type="radio" data-role="segmented" name="isFree" ng-model="isFree" ng-checked="isFree == 'true'" value="true">
+                            </label>
+                            <div ng-model="eventColor" mobiscroll-color="colorSettings"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,254 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+
+<style>
+    .permission-table .headerItem { font-weight: bold;}
+    .permission-table .subItem { padding-left: 30px;}
+    
+    .light-blue { color: #1D77D5;}
+    
+    .mytooltip .tooltiptext {
+      visibility: hidden;
+      max-width: 600px;
+      background-color: rgb(0, 0, 0, 0.7);
+      padding: 8px;
+      color: #fff;
+      border-radius: 6px;
+      font-family: arial, sans-serif;
+      font-size: 12px;
+      line-height: 14px;
+    
+      /* Position the tooltip */
+      position: absolute;
+      z-index: 100;
+      left: -30px;
+    }
+    .mytooltip .tooltiptext a{
+        color: #e69900;
+    }
+    .mytooltip .tooltiptext ol, .mytooltip .tooltiptext li {
+        margin: 0;
+        padding: 0;
+    }
+
+    .mytooltip .tooltiptext ol {
+        display: table;
+    }
+    
+    .mytooltip .tooltiptext ol >li {
+        list-style: none;
+        counter-increment: foo;
+        display: table-row;
+    }
+    
+    .mytooltip .tooltiptext ol >li::before {
+        content: counter(foo) ".";
+        display: table-cell;
+        text-align: right;
+        padding-right: .3em;
+    }
+    .mytooltip:hover .tooltiptext {
+      visibility: visible;
+      width: max-content;
+    }
+    @media only screen and (max-width: 600px) {
+        .mytooltip .tooltiptext{
+            max-width: 300px!important;
+        }
+    }
+</style>
+
+<div class="container permissions">
+
+    <div class="permission-selector">
+        <h3>Permissions</h3>
+        <md-input-container>
+          <label>Select Role</label>
+          <md-select ng-model="userrole" ng-change="updatePermissions()">
+            <md-option ng-value="0"><em>Please select..</em></md-option>
+            <md-option ng-repeat="role in roles" ng-value="role.id">
+                {{role.display_text}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+
+    </div>
+
+    <table class="table table-bordered table-striped permission-table">
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Read</th>
+                <th>Write</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr ng-repeat="m in modules">
+                <td ng-class="{headerItem: m.sub == '0', subItem: m.sub == '1'}">
+                    <i ng-show="m.id==22" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.dashboard_administrator | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==23" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.dashboard_manager | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==24" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.dashboard_employer | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==25" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.dashboard_employee | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==32" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.work_safety_hazardous_substance_register | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==34" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.work_safety_asset_register | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==38" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.work_safety_injury_register | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==48" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.work_safety_conduct_audit | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==18" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.profile_training_courses | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==43" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.profile_view_performance_review | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==5" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.employees_employees | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==36" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.employees_employee_notes | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==39" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.employees_license_qualification | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==11" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.recruitment_assessment_checklist | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==16" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.recruitment_recruiter | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==41" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.performance_management_review | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==51" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.performance_management_dashboard | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==46" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.training_course_management | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==57" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.training_add_more_time_expired_course | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==28" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.training_dashboard_reports | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==29" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.training_allocate_career | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==52" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.training_event_scheduler | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==56" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.training_event_scheduler_dashboard | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==45" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.report_performance_review_reports| trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==49" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.report_injury_reports | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==50" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.report_training_reports | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==54" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.report_event_reports | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==15" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_users | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==33" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_sitedata | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==30" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_reminders | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==37" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_system_logs| trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==42" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_modify_performance_review_form| trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==53" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_create_event | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==6" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_department | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==7" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_position | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==8" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_level | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==9" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_employee_type | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==27" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_allocate_training | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==10" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.admin_course_category | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==14" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.hrmadmin_user_admin | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==2" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.hrmadmin_permissions | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==35" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.hrmadmin_sitedata | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==55" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.hrmadmin_siteinfotexts | trustHtml"></span>
+                    </i>
+                    <i ng-show="m.id==47" class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                        <span class="tooltiptext" ng-bind-html="info_permission.hrmadmin_audit_manager | trustHtml"></span>
+                    </i>
+                    
+                    {{ m.text }}
+                </td>
+                <td><input type="checkbox" ng-model="permissions.read[m.id]" ng-true-value="1" ng-false-value="0" ng-disabled="userrole == 0 || !(perms.permissions.write == 1 || perms.permissions.delete == 1)" ng-checked="permissions.read[m.id] == 1"></td>
+                <td><input type="checkbox" ng-model="permissions.write[m.id]" ng-true-value="1" ng-false-value="0" ng-disabled="userrole == 0 || !(perms.permissions.write == 1 || perms.permissions.delete == 1)" ng-checked="permissions.write[m.id] == 1"></td>
+                <td><input type="checkbox" ng-model="permissions.delete[m.id]" ng-true-value="1" ng-false-value="0" ng-disabled="userrole == 0 || !(perms.permissions.write == 1 || perms.permissions.delete == 1)" ng-checked="permissions.delete[m.id] == 1"></td>
+            </tr>
+
+
+            <tr>
+                <td colspan="4">
+                    <div class="userMessage">&nbsp;
+                        <div id="log_er_msg"></div>
+                        <div id="login_error" class="col-xs-12" ng-show="showMessage == 1">
+                            <div class="alert {{ success == 1 ? 'alert-success' : 'alert-danger'}} alert-dismissable">
+                                <i class="fa fa-ban"></i>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ userMessage }}
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <div class="button-container">
+                        <button ng-click="savePermissions()" value="Save" class="btn btn-primary" ng-class="{'disabled': userrole == 0 || !(perms.permissions.write == 1 || perms.permissions.delete == 1)}" ng-disabled="userrole == 0">Save</button>
+                    </div>
+                </td>
+            </tr>
+
+
+        </tbody>
+    </table>
+
+
+</div>

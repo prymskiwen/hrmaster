@@ -1,0 +1,333 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+<style>
+    html body {
+       /* height: auto; !important;*/
+    }
+
+    .form-group.align-center {
+        display: flex;
+        align-items: center;
+    }    
+    
+    .form-group label.control-label {
+        padding-top: 0px !important;
+    }
+
+    .image-viewer {
+        max-width: 100%;
+    }
+    .md-tab {
+        text-transform: capitalize;
+        font-weight: bold;
+    }
+
+    md-content {
+        overflow: hidden;
+    }
+
+    .remove-image-button {
+        float: right;
+        display: none;
+        color: red;
+        opacity: 1.0;
+    }
+
+    .remove-image-button.show {
+        display: block;
+    }
+
+    .image-box {
+        padding: 10px;
+    }
+
+    .image-box img {
+        padding: 10px;
+    }
+    input {
+        max-width: 100%;
+        border: 0px solid;
+    }
+    
+    .md-whiteframe-1dp, .md-whiteframe-z1 {
+        box-shadow: none;
+        border: 1px solid #b6dde7;
+        border-radius: 6px;
+        height: 36px;
+    }  
+    md-autocomplete input:not(.md-input) {
+        height: 36px;
+    }
+    md-autocomplete button {
+        margin-right: -20px;
+    }
+    
+    md-virtual-repeat-container:first-child {
+        background-color: red !important;
+    }
+    
+    /*.course-supervisor md-virtual-repeat-container.md-autocomplete-suggestions-container {*/
+    .md-virtual-repeat-container.md-autocomplete-suggestions-container {
+        border-top: none;
+        border-radius: 0;
+        box-shadow: 0px 7px 14px rgba(0,0,0,.25) !important;
+    }
+    
+    md-radio-button .md-label{ display: flex; align-items: center; }
+    md-radio-button .md-label >span{margin-right: 10px;}
+    
+    .light-blue { color: #1D77D5;}
+    
+    .mytooltip .tooltiptext {
+      visibility: hidden;
+      max-width: 600px;
+      background-color: rgb(0, 0, 0, 0.7);
+      padding: 8px;
+      color: #fff;
+      border-radius: 6px;
+      font-family: arial, sans-serif;
+      font-size: 12px;
+      line-height: 14px;
+    
+      /* Position the tooltip */
+      position: absolute;
+      z-index: 100;
+      left: -70px;
+    }
+    .mytooltip .tooltiptext a{
+        color: #e69900;
+    }
+    .mytooltip .tooltiptext ol, .mytooltip .tooltiptext li {
+        margin: 0;
+        padding: 0;
+    }
+
+    .mytooltip .tooltiptext ol {
+        display: table;
+    }
+    
+    .mytooltip .tooltiptext ol >li {
+        list-style: none;
+        counter-increment: foo;
+        display: table-row;
+    }
+    
+    .mytooltip .tooltiptext ol >li::before {
+        content: counter(foo) ".";
+        display: table-cell;
+        text-align: right;
+        padding-right: .3em;
+    }
+    .mytooltip:hover .tooltiptext {
+      visibility: visible;
+      width: max-content;
+    }
+    @media only screen and (max-width: 600px) {
+        .mytooltip .tooltiptext{
+            max-width: 300px!important;
+        }
+    }
+
+</style>
+
+
+
+<div class="container" id="users-div">
+    <h3>{{pageTitle}}</h3>
+    
+    
+<form class="form-horizontal">
+
+        <div ng-cloak="" class="tabsdemoDynamicHeight">
+            <md-content class="md-padding">
+                <!-- Choose Course -->
+                <div class="form-group align-center">
+                    <label class="control-label col-sm-3" for="course_name">
+                        Choose Course:
+                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                            <span class="tooltiptext" ng-bind-html="info_course | trustHtml"></span>
+                        </i>
+                    </label>
+                    <div class="col-sm-9">
+                        
+                        <select class="form-control" ng-model="alloc_course.course_id" ng-required="formEnabled == 1" ng-change="updateDescription()" ng-init="alloc_course.course_id = ''">
+                            <option value="">Please select..</option>
+                            <option value="{{option.course_id}}" ng-repeat="option in course_list">{{ option.course_name }}</option>
+                        </select>                        
+
+                        <!--<autocomplete class="form-control" id="course_name" name="course_name" ng-model="course_name" attr-placeholder="Please type course name..." click-activation="true" data="course_name_list" on-type="doChangeCourseName" on-select="doSelectedCourseName"></autocomplete>-->
+                    </div>
+                </div>
+
+                <!-- Course Supervisor -->
+                <div class="form-group align-center">
+                    <label class="control-label col-sm-3" for="course_supervior">
+                        Course Supervisor:
+                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                            <span class="tooltiptext" ng-bind-html="info_course_supervisor | trustHtml"></span>
+                        </i>
+                    </label>
+                    <div class="col-sm-9 course-supervisor">
+                        
+                        <md-autocomplete flex required                  
+                            md-input-name="course_supervisor"
+                            md-no-cache="cs.noCache"
+                            md-selected-item="cs.course_supervisor"
+                            md-search-text="cs.searchText"
+                            md-selected-item-change="selectSupervisor()"
+                            md-items="item in cs.querySearch(cs.searchText)"
+                            md-item-text="item.display"
+                            md-require-match>
+                            <md-item-template>
+                                <span md-highlight-text="cs.searchText">{{item.display}}</span>
+                            </md-item-template>
+                        </md-autocomplete> 
+                                            
+                    </div>
+                </div>
+
+                <!-- Course Description -->
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="course_description">
+                        Course Description:
+                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                            <span class="tooltiptext" ng-bind-html="info_course_description | trustHtml"></span>
+                        </i>
+                    </label>
+                    <div class="col-sm-9">
+                        <textarea readonly="readonly" class="form-control" rows="5" ng-model='alloc_course.course_description' name="course_description" id="course_description"></textarea>
+                    </div>
+                </div>
+
+                <!-- Enter Employee Name -->
+                <div class="form-group align-center">
+                    <label class="control-label col-sm-3" for="employee_name">
+                        Employee Name:
+                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                            <span class="tooltiptext" ng-bind-html="info_employee | trustHtml"></span>
+                        </i>
+                    </label>
+                    <div class="col-sm-9">
+                        <md-autocomplete flex required
+                            md-input-name="employee_name"
+                            md-selected-item="cs.employee_name"
+                            md-search-text="cs.employeeText"
+                            md-selected-item-change="selectEmployee()"
+                            md-items="i in cs.employeeSearch(cs.employeeText)"
+                            md-item-text="i.display"
+                            md-require-match>
+                            <md-item-template>
+                                <span md-highlight-text="cs.employeeText">{{i.display}}</span>
+                            </md-item-template>
+                        </md-autocomplete> 
+                    </div>
+                </div>
+
+                <!-- Alloc Date -->
+                <div class="form-group">
+                    <label class="control-label col-sm-3">
+                        When should this course be allocated:
+                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                            <span class="tooltiptext" ng-bind-html="info_alloc_date | trustHtml"></span>
+                        </i>
+                    </label>
+                    <div class="col-sm-9">
+                        <md-radio-group ng-model="alloc_date_type" ng-change="changedEnterDate()">
+                            <md-radio-button value="now" class="md-primary" >
+                                Now
+                            </md-radio-button>
+                            <md-radio-button value="enter_date">
+                                Enter Date
+                            </md-radio-button>
+                            <input type="date" ng-model='enter_alloc_date' name="alloc_date" class="form-control" id="alloc_date" ng-show="show_expire_date_field">
+                        </md-radio-group>
+                    </div>
+                </div>
+
+                <!-- Expire hours -->
+                <div class="form-group">
+                    <label class="control-label col-sm-3">
+                        How long does this person have to do the course before it expires from the date of commencement?
+                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                            <span class="tooltiptext" ng-bind-html="info_course_expire_hours | trustHtml"></span>
+                        </i>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" ng-model="alloc_course.expire_hours" ng-required="formEnabled == 1" ng-init="alloc_course.expire_hours = '24'">
+                            <option value="{{option.value}}" ng-repeat="option in expire_hours.availableOptions">{{ option.title }}</option>
+                        </select>                           
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label class="control-label col-sm-3">
+                        Email the users a link and their password?
+                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                            <span class="tooltiptext" ng-bind-html="info_send_email | trustHtml"></span>
+                        </i>
+                    </label>
+                    <div class="col-sm-9">
+                        <md-radio-group ng-model="alloc_course.is_sending_email">
+                            <md-radio-button value="1" class="md-primary" >
+                                Yes, when the course becomes active
+                            </md-radio-button>
+                            <md-radio-button value="0">
+                                No, do not email the learner
+                            </md-radio-button>
+                        </md-radio-group>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-3">
+                        Send daily reminder emails for overdue courses
+                        <i class="mytooltip glyphicon glyphicon-info-sign light-blue tooltip-icon" style="font-size: 16px">
+                            <span class="tooltiptext" ng-bind-html="info_course_reminder | trustHtml"></span>
+                        </i>
+                    </label>
+                    <div class="col-sm-9">
+                        <md-radio-group ng-model="alloc_course.daily_reminder_email_receiver">
+                            <md-radio-button class="md-primary" >
+                                Not Yet Set
+                            </md-radio-button>
+                            <md-radio-button value="employee">
+                                To Employee
+                            </md-radio-button>
+                            <md-radio-button value="supervisor">
+                                To Course Supervisor
+                            </md-radio-button>
+                            <md-radio-button value="employee_supervisor">
+                                To Employee and Course Supervisor
+                            </md-radio-button>
+                            <md-radio-button value="employee_employer">
+                                To Employee and Employer
+                            </md-radio-button>
+                        </md-radio-group>
+                    </div>
+                </div>
+            </md-content>
+        </div>
+    
+    
+    
+        <div class="userMessage">&nbsp;
+            <div id="log_er_msg"></div>
+            <div id="login_error" class="col-xs-12" ng-show="showMessage == 1" style="float: none;">
+                <div class="alert {{ success == 1 ? 'alert-success' : 'alert-danger'}} alert-dismissable" style="padding-right: 45px;">
+                    <i class="fa fa-ban"></i>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ userMessage }}
+                </div>
+            </div>
+        </div>    
+    
+    
+    
+        <div class="form-group" style="float: right; padding: 20px;">
+            <button value="button" class="btn btn-primary" ng-click="save(1)">Save and Add Another</button>
+            <button value="button" class="btn btn-primary" ng-click="save()">Save</button>
+            <button class="btn btn-info" ng-click="cancel()" ng-disabled="formEnabled == 0">Cancel</button>
+        </div>
+    </form>    
+    
+</div> 

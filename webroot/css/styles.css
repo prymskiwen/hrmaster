@@ -1,0 +1,104 @@
+/**** Site Wide styles ****/
+
+body { font-size: 14px; color: #333; }
+
+.float-left { float: left; }
+.clear { clear: both; } 
+.help-text { font-size: 0.8em;}
+
+
+
+/******** Page Layout ********/
+.main-content { width: 60%; margin: 0 auto; }
+.main-content-1 { width: 50%; padding-top: 15px; margin: 0 auto; }
+.main-content-2 { width: 50%; padding-top: 15px; }
+fieldset { margin: 0 0 10px 0;}
+.label { color: #333; width: 100px; text-align: right; font-size: 0.9em; margin-top: 5px; }
+.full-width { width: 100%; }
+
+input, select { height: 30px; border-radius: 6px; border: 1px solid #BFEFFF; padding: 2px 5px; color: #333; }
+input[type='radio']{ height: unset;}
+input.long   { width: 279px; }
+input.medium { width: 186px; }
+input.short  { width: 93px; }
+input[disabled] { background-color: #EAEAEA; }
+button { margin: 0 0 0 0; min-width: 80px;}
+.error { border-color: #F00; }
+
+.cal-image { border: none; margin: 3px 0 0 5px; }
+.cal-image:hover { cursor: pointer; }
+
+
+/*** Login Form ***/
+.login-form-wrapper { width: 500px; margin: 40px auto 0; border: 1px solid #BFEFFF; border-radius: 6px; background-color: #E0FFFF; padding: 20px;}
+
+.login-form-wrapper fieldset {border: none; margin: 10px auto; width: 350px; }
+.login-form-wrapper .label { width: 80px; text-align: right; font-weight: bold; margin: 4px 10px 0 0; color: #333; font-size: 1em;}
+.login-form-wrapper input { width: 200px; }
+
+.login-form-wrapper .login-message { text-align: center; margin: 15px 0; font-size: 0.9em; }
+.login-form-wrapper .login-message.success { color: #0A0; }
+.login-form-wrapper .login-message.fail { color: #F00; }
+
+.login-form-wrapper .buttons { width: 260px; margin: 0 auto; }
+.login-form-wrapper .buttons button { width: 118px; margin-right: 5px; padding-left: 3px; padding-right: 3px; }
+.login-form-wrapper .buttons input { width: 118px; height: 34px; margin-right: 5px; padding-left: 3px; padding-right: 3px; }
+
+
+.pageGrid, #usergrid, #gridbox, #emptabs, .actionbuttons { width:980px; height:380px; background-color:white; margin: 20px auto 10px auto; border-color:#B0E2FF; box-shadow: none; }
+.pageGrid, #usergrid, #gridbox { height: 200px;}
+.actionbuttons { height: 40px; text-align: center; margin-bottom: 46px;}
+div.gridbox_material.gridbox .xhdr { border-bottom: solid 1px #B0E2FF; }
+.dhxtabbar_base_material,
+.dhxtabbar_base_material div.dhxtabbar_tabs,
+.dhxtabbar_base_material div.dhx_cell_tabbar div.dhx_cell_cont_tabbar { border-color:#B0E2FF; }
+    
+div.gridbox_material.gridbox table.obj.row20px tr td { height: 24px; line-height: 24px; font-size: 0.8em; }    
+#savemessage { width: 300px; text-align: center; margin: 8px auto;}
+#savemessage.success { color: #0C0;}
+#savemessage.fail { color: #F00;}
+
+
+/****** PPAF Form ********/
+#questionaire-wrapper, #questionaire-header,#questionaire-footer { width: 980px; margin: 0 auto 10px auto; border: solid 1px #B0E2FF; }
+
+@media only screen and (max-device-width: 480px) {
+    #questionaire-wrapper { width: 100%; padding: 0 5px;}
+    #questionaire-wrapper .rating-description { display: none; } 
+}
+
+#questionaire-wrapper .question { display: -webkit-flex; display: flex; width: 100%;  margin-bottom: 10px;}
+#questionaire-wrapper .question.header { height: 50px; font-weight: bold;}
+
+#questionaire-wrapper .question div { flex: 1; text-align: center;}
+#questionaire-wrapper .question div:first-child { flex: 5; padding: 0 0 0 8px; text-align: left;}
+#questionaire-wrapper .question div input { margin: 0; height: 16px;}
+#questionaire-wrapper textarea { border: 1px solid #b0e2ff; height: 100px; margin: 10px; padding: 5px; width: 98%; }
+
+body#ppafPage #savemessage { color: #0A0; width: 460px;  }
+body#ppafPage #savemessage.fail { color: #F00; }
+
+body#ppafPage .header-row { display: -webkit-flex; display: flex; width: 100%; }
+body#ppafPage .header-row div.label { font-weight: bold; flex: 1; text-align: left; }
+body#ppafPage .header-row div.detail { flex: 2; text-align: left; margin-top: 3px; }
+
+body#ppafPage #questionaire-footer { padding: 10px; }
+body#ppafPage #questionaire-footer .employee-action { display: flex; }
+body#ppafPage #questionaire-footer .employee-action div { flex: 2; }
+body#ppafPage #questionaire-footer .employee-action div:first-child { flex: 1; text-align: right; font-weight: bold;  margin: 4px 10px 0 0; }
+body#ppafPage #questionaire-footer .confirmation-message { margin-bottom: 10px;  }
+
+
+#score { text-align: right; padding: 0 10px; }
+body#ppafPage #overall { text-align: right; margin: 5px 8px 5px 0; }
+    
+/* PPAF / Cessation Questions Admin */
+#ppaf_adminPage #ppaf-admin-form { width: 980px; margin: 0 auto; }
+@media only screen and (max-device-width: 480px) {
+    #ppaf_adminPage #ppaf-admin-form { width: 100%; padding: 0 5px;}
+}
+
+#ppaf_adminPage #ppaf-admin-form .fieldset { display: flex; margin: 10px 0 0 0;}
+
+#ppaf_adminPage #ppaf-admin-form .fieldset .label { flex: 1; }
+#ppaf_adminPage #ppaf-admin-form .fieldset .input { flex: 3; }

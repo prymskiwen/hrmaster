@@ -1,0 +1,41 @@
+<ng-include src="'assets/templates/siteNavigation.html'"></ng-include>
+
+<style>
+    .completed { text-decoration: none; }
+    .completed a { color: #828282;  }
+    .completed a:hover { text-decoration: none; cursor: default; }
+    .red {color: red;}
+    .green {color: #70ad47;}
+    .blue {color: #5b9bd5;text-align: center;}
+    .yellow {color: #e6a400;}
+</style>
+
+<style>
+    /*.search-field-wrapper { display: inline-block; width: 40%; }
+    .allocate-btn { float: right; display: inline-block; }*/
+    
+    @media only screen and (max-width: 600px) {
+        html body { padding: 0; }
+        .content { padding: 0 10px; }
+        .container { padding: 0 !important; }
+        .allocate-btn { width: 120px; margin-bottom: 5px; }       
+    }   
+
+
+</style>
+
+<div class="container" id="employeecourses">
+    <h3>{{pageTitle}}</h3>
+
+    <div class="clear"></div>
+    <div class="event-scheduler-status-btn" style="padding: 5px 0px;" ng-if="schedulerdashboard_write">
+        <button class="btn btn-sm" ng-class="{'btn-success': showMode == 0, 'btn-default': showMode == 1 }" ng-click="updateFilterStatus(0)" style="width: 150px;">Show Active Users</button>
+        <button class="btn btn-sm" ng-class="{'btn-success': showMode == 1, 'btn-default': showMode == 0 }" ng-click="updateFilterStatus(1)" style="width: 150px;">Show All Users</button>
+    </div>
+    <div class="event-scheduler-location-btn" style="padding:5px 0px" ng-if="schedulerdashboard_write">
+        <button class="btn btn-sm" ng-class="{'btn-success': locationMode == 0, 'btn-default': locationMode == 1 }" ng-click="updateFilterLocation(0)" style="width: 150px;">View Your Site Location</button>
+        <button class="btn btn-sm" ng-class="{'btn-success': locationMode == 1, 'btn-default': locationMode == 0 }" ng-click="updateFilterLocation(1)" style="width: 150px;">View All Site Locations</button>
+    </div>
+    <div class="grid trainingcourses-grid" external-scopes="clickHandler" ui-grid="gridOptionsComplex" ui-grid-edit ui-grid-resize-columns ui.grid.selection></div>
+ 
+</div>
