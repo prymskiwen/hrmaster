@@ -48,3 +48,14 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Custom ignore files
+.htaccess
+vendor/
+hrmasterapp/
+assets/uploads/
+assets/php/uploads/
+assets/php/Zend/
+assets/files/
+
+
+
