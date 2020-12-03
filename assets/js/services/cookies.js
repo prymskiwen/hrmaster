@@ -193,7 +193,6 @@ app.service('cookie', function($rootScope, $location, $cookies, $route) {
         //var cook = $cookies.getObject(name);
         //var cook = JSON.parse(localStorage.getItem(name));
         var cook = obj.getWithExpiry(name);
-        console.log(cook);
         return (angular.isDefined(cook)) ? cook : false;
     }
 
